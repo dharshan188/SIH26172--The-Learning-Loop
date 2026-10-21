@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-label="MARVIN end-to-end workflow animation">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#060d1f"/><stop offset="1" stop-color="#0b1430"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+    <style>
+      .t{font-family:'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif}
+      .card{fill:#0d1b36;stroke:#1f3b63;stroke-width:1.5}
+      .ttl{font-size:19px;font-weight:700;fill:#e2e8f0}
+      .sub{font-size:13.5px;fill:#94a3b8}
+      .num{font-size:13px;font-weight:800;fill:#0b1430}
+      .hl{opacity:0;animation:hl 10s infinite}
+      @keyframes hl{0%{opacity:0}2%{opacity:1}14%{opacity:1}20%{opacity:.18}96%{opacity:.18}100%{opacity:0}}
+      .flow{stroke-dasharray:6 10;animation:dash 1s linear infinite}
+      @keyframes dash{to{stroke-dashoffset:-16}}
+      .lock{animation:lock 10s infinite}
+      @keyframes lock{0%,44%{opacity:1}46%,96%{opacity:0}100%{opacity:1}}
+      .unlock{animation:unlock 10s infinite}
+      @keyframes unlock{0%,44%{opacity:0}46%,96%{opacity:1}100%{opacity:0}}
+      .state{opacity:0}
+      .s1{animation:s1 10s infinite}.s2{animation:s2 10s infinite}.s3{animation:s3 10s infinite}
+      @keyframes s1{0%,22%{opacity:1}23%,100%{opacity:0}}
+      @keyframes s2{0%,22%{opacity:0}23%,45%{opacity:1}46%,100%{opacity:0}}
+      @keyframes s3{0%,45%{opacity:0}46%,96%{opacity:1}97%,100%{opacity:0}}
+    </style>
+  </defs>
+
+  <rect width="1200" height="640" rx="20" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <g class="t">
+    <text x="40" y="48" font-size="24" font-weight="800" fill="#e2e8f0">How MARVIN hears you</text>
+    <text x="40" y="74" font-size="14.5" fill="#94a3b8">A wake word has to pass two independent on-chip checks before any audio leaves the ESP32</text>
+    <!-- live state pill -->
+    <g transform="translate(905 30)">
+      <rect width="255" height="40" rx="20" fill="#0d1b36" stroke="#1f3b63"/>
+      <text x="18" y="26" font-size="13" fill="#94a3b8" font-weight="600">STATE</text>
+      <g class="state s1"><circle cx="82" cy="20" r="6" fill="#64748b"/><text x="96" y="26" font-size="15" font-weight="800" fill="#cbd5e1">LISTENING</text></g>
+      <g class="state s2"><circle cx="82" cy="20" r="6" fill="#facc15"/><text x="96" y="26" font-size="15" font-weight="800" fill="#fde68a">VERIFYING…</text></g>
+      <g class="state s3"><circle cx="82" cy="20" r="6" fill="#22c55e"><animate attributeName="r" values="6;9;6" dur="1s" repeatCount="indefinite"/></circle><text x="96" y="26" font-size="15" font-weight="800" fill="#86efac">STREAMING</text></g>
+    </g>
+  </g>
+
+  <!-- On-device boundary -->
+  <path d="M30 108 H1180 V360 H860 V590 H30 Z" fill="none" stroke="none"/>
+  <path d="M28 104 H1172 V588 H858 V366 H28 Z" fill="#22d3ee" fill-opacity="0.035" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <g class="t">
+    <rect x="44" y="92" width="318" height="26" rx="13" fill="#062a36" stroke="#22d3ee" stroke-opacity=".7"/>
+    <text x="203" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#67e8f9">ON-DEVICE · ESP32 · audio never leaves</text>
+    <rect x="44" y="602" width="300" height="26" rx="13" fill="#2a0f3d" stroke="#c084fc" stroke-opacity=".7"/>
+    <text x="194" y="620" text-anchor="middle" font-size="13" font-weight="700" fill="#d8b4fe">CLOUD-LAST · only after verification</text>
+  </g>
+
+  <!-- Flow path -->
+  <path d="M180 220 H1020 V470 H180" fill="none" stroke="#1f3b63" stroke-width="4"/>
+  <path class="flow" d="M180 220 H1020 V470 H180" fill="none" stroke="#38bdf8" stroke-width="2.5" opacity=".7"/>
+
+  <!-- Lock between Stage-2 and stream -->
+  <g transform="translate(880 470) scale(.72)">
+    <circle r="24" fill="#0b1430" stroke="#1f3b63" stroke-width="2"/>
+    <g class="lock"><rect x="-9" y="-3" width="18" height="14" rx="3" fill="#f87171"/><path d="M-6 -3 V-8 A6 6 0 0 1 6 -8 V-3" fill="none" stroke="#f87171" stroke-width="3"/></g>
+    <g class="unlock"><rect x="-9" y="-3" width="18" height="14" rx="3" fill="#4ade80"/><path d="M-6 -3 V-8 A6 6 0 0 1 6 -8 V-9" fill="none" stroke="#4ade80" stroke-width="3" transform="rotate(-25 -6 -3)"/></g>
+  </g>
+
+  <!-- Nodes: row 1 (left→right), row 2 (right→left). Highlight delays follow pulse timing. -->
+  <g class="t">
+    <!-- 1 Mic -->
+    <g transform="translate(60 160)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#22d3ee" filter="url(#soft)" style="animation-delay:0s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#22d3ee"/><text class="num" x="26" y="31" text-anchor="middle">1</text>
+      <text class="ttl" x="50" y="33">INMP441 mic</text>
+      <text class="sub" x="20" y="68">I²S · 16 kHz · mono PCM</text>
+      <text class="sub" x="20" y="92">rolling buffer, nothing sent</text>
+    </g>
+    <!-- 2 Log-Mel -->
+    <g transform="translate(340 160)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#38bdf8" filter="url(#soft)" style="animation-delay:1.155s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#38bdf8"/><text class="num" x="26" y="31" text-anchor="middle">2</text>
+      <text class="ttl" x="50" y="33">Log-Mel frontend</text>
+      <text class="sub" x="20" y="68">FFT → mel → log · 98 × 24</text>
+      <g transform="translate(20 80)">
+        <rect width="200" height="22" rx="4" fill="#0b2545"/>
+        <rect x="20" y="4" width="40" height="14" rx="3" fill="#22c55e" opacity=".75"><animate attributeName="opacity" values=".2;.9;.2" dur="1.4s" repeatCount="indefinite"/></rect>
+        <rect x="70" y="6" width="24" height="10" rx="3" fill="#facc15" opacity=".7"><animate attributeName="opacity" values=".9;.2;.9" dur="1.4s" repeatCount="indefinite"/></rect>
+        <rect x="120" y="4" width="50" height="14" rx="3" fill="#22c55e" opacity=".6"><animate attributeName="opacity" values=".3;.8;.3" dur="1.1s" repeatCount="indefinite"/></rect>
+      </g>
+    </g>
+    <!-- 3 Stage-1 -->
+    <g transform="translate(620 160)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#60a5fa" filter="url(#soft)" style="animation-delay:2.31s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#60a5fa"/><text class="num" x="26" y="31" text-anchor="middle">3</text>
+      <text class="ttl" x="50" y="33">Stage-1 Sentinel</text>
+      <text class="sub" x="20" y="68">INT8 CNN every 500 ms</text>
+      <text class="sub" x="20" y="92">tuned for recall · τ ≈ 0.60</text>
+    </g>
+    <!-- 4 Gate -->
+    <g transform="translate(900 160)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#818cf8" filter="url(#soft)" style="animation-delay:3.46s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#818cf8"/><text class="num" x="26" y="31" text-anchor="middle">4</text>
+      <text class="ttl" x="50" y="33">3-window gate</text>
+      <text class="sub" x="20" y="68">kills one-off noise spikes</text>
+      <g transform="translate(20 80)">
+        <rect width="60" height="20" rx="5" fill="#312e81"/><rect x="70" width="60" height="20" rx="5" fill="#312e81"/><rect x="140" width="60" height="20" rx="5" fill="#312e81"/>
+        <rect width="60" height="20" rx="5" fill="#818cf8"><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.33;.5;.9;1" dur="3s" repeatCount="indefinite"/></rect>
+        <rect x="70" width="60" height="20" rx="5" fill="#818cf8"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.4;.6;.9;1" dur="3s" repeatCount="indefinite"/></rect>
+        <rect x="140" width="60" height="20" rx="5" fill="#818cf8"><animate attributeName="opacity" values="0;0;1;0" keyTimes="0;.66;.75;1" dur="3s" repeatCount="indefinite"/></rect>
+      </g>
+    </g>
+    <!-- 5 Stage-2 -->
+    <g transform="translate(900 410)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#a78bfa" filter="url(#soft)" style="animation-delay:4.54s"/>
+      <rect class="card" width="240" height="120" rx="16" style="stroke:#7c3aed"/>
+      <circle cx="26" cy="26" r="14" fill="#a78bfa"/><text class="num" x="26" y="31" text-anchor="middle">5</text>
+      <text class="ttl" x="50" y="33">Stage-2 Judge</text>
+      <text class="sub" x="20" y="68">independent verifier · τ ≈ 0.65</text>
+      <text class="sub" x="20" y="92">rejects MARGIN · MARTIN · NINE</text>
+    </g>
+    <!-- 6 Stream -->
+    <g transform="translate(620 410)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#c084fc" filter="url(#soft)" style="animation-delay:5.69s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#c084fc"/><text class="num" x="26" y="31" text-anchor="middle">6</text>
+      <text class="ttl" x="50" y="33">WebSocket stream</text>
+      <text class="sub" x="20" y="68">20 ms PCM16 frames</text>
+      <text class="sub" x="20" y="92">stops: 1.2 s silence / 9 s cap</text>
+    </g>
+    <!-- 7 ASR -->
+    <g transform="translate(340 410)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#e879f9" filter="url(#soft)" style="animation-delay:6.84s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#e879f9"/><text class="num" x="26" y="31" text-anchor="middle">7</text>
+      <text class="ttl" x="50" y="33">faster-whisper ASR</text>
+      <text class="sub" x="20" y="68">self-hostable · CTranslate2 INT8</text>
+      <text class="sub" x="20" y="92">no third-party cloud API</text>
+    </g>
+    <!-- 8 Output -->
+    <g transform="translate(60 410)">
+      <rect class="hl" x="-6" y="-6" width="252" height="132" rx="20" fill="#34d399" filter="url(#soft)" style="animation-delay:8s"/>
+      <rect class="card" width="240" height="120" rx="16"/>
+      <circle cx="26" cy="26" r="14" fill="#34d399"/><text class="num" x="26" y="31" text-anchor="middle">8</text>
+      <text class="ttl" x="50" y="33">OLED + dashboard</text>
+      <text class="sub" x="20" y="68">live transcript:</text>
+      <text x="20" y="94" font-size="15" font-weight="700" fill="#6ee7b7">“what is the weather?”</text>
+    </g>
+  </g>
+
+  <!-- Travelling pulse -->
+  <g>
+    <circle r="16" fill="#22d3ee" opacity=".35" filter="url(#soft)">
+      <animateMotion dur="10s" repeatCount="indefinite" path="M180 220 H1020 V470 H180" keyPoints="0;1;1" keyTimes="0;.8;1" calcMode="linear"/>
+    </circle>
+    <circle r="7" fill="#e0f2fe">
+      <animateMotion dur="10s" repeatCount="indefinite" path="M180 220 H1020 V470 H180" keyPoints="0;1;1" keyTimes="0;.8;1" calcMode="linear"/>
+      <animate attributeName="fill" values="#22d3ee;#22d3ee;#a78bfa;#e879f9;#34d399;#34d399" keyTimes="0;.35;.46;.68;.8;1" dur="10s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

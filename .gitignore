@@ -1,0 +1,37 @@
+src/wifi_config.h
+.pio/
+backend/.venv/
+backend/__pycache__/
+backend/debug_last_command.wav
+backend/models/
+frontend/node_modules/
+frontend/dist/
+
+# Secrets
+.aws
+.env*
+
+# Build / toolchain output
+oled_test/.pio/
+**/__pycache__/
+*.pyc
+
+# Rendered films (>100 MB, GitHub limit) and previews
+video/out/
+videos/out/
+video/preview/
+
+# Raw voice recordings & local datasets (personal audio, kept off GitHub)
+marvin_dataset/
+isro_dataset/
+isro_dataset_repeat_test/
+isro_simple_test/
+
+# Editor / agent scratch
+.vscode/
+.agents/
+.codex/
+*.cascade_bak
+*.chirale_bak
+*.bak
+*_bak

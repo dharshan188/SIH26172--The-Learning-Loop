@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MARVIN · SIH26172</title>
+<meta name="description" content="Interactive walkthrough of MARVIN, a two-stage INT8 wake-word cascade on ESP32 by Team The Learning Loop.">
+<style>
+:root{
+  --bg:#050b1a;--panel:#0d1b36;--line:#1f3b63;--text:#e2e8f0;--muted:#94a3b8;--dim:#64748b;
+  --cyan:#22d3ee;--blue:#60a5fa;--violet:#a78bfa;--pink:#e879f9;--green:#34d399;--red:#f87171;--amber:#facc15;--orange:#fb923c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif;
+  background-image:radial-gradient(circle at 15% 0%,#0e2a4a 0,transparent 45%),radial-gradient(circle at 90% 30%,#2a0f4a 0,transparent 40%);background-attachment:fixed}
+a{color:var(--cyan)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:10;background:rgba(5,11,26,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:18px;align-items:center;height:56px;overflow-x:auto;white-space:nowrap}
+nav b{color:var(--cyan);letter-spacing:2px;margin-right:auto}
+nav a{color:var(--muted);text-decoration:none;font-size:14px}
+nav a:hover{color:var(--text)}
+section{padding:64px 0 24px}
+h2{font-size:clamp(24px,3.4vw,34px);margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 28px;max-width:760px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px}
+
+/* hero */
+.hero{padding:72px 0 40px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.kicker{color:#7dd3fc;letter-spacing:4px;font-size:13px;font-weight:700}
+.hero h1{font-size:clamp(56px,10vw,104px);line-height:1;margin:10px 0;font-weight:800;letter-spacing:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--blue),#c084fc,var(--cyan));background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 8s linear infinite}
+@keyframes sheen{to{background-position:300% 0}}
+.hero p{font-size:20px;color:#cbd5e1;margin:0 0 22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:999px;border:1px solid var(--cyan);color:var(--text);text-decoration:none;font-weight:600;margin:0 8px 8px 0;background:#062a36;cursor:pointer;font:inherit}
+.btn:hover{background:#0b3b4d}
+.orb{aspect-ratio:1;max-width:320px;margin:auto;position:relative;display:grid;place-items:center}
+.orb i{position:absolute;inset:25%;border:2px solid var(--cyan);border-radius:50%;animation:ring 3s ease-out infinite;opacity:0}
+.orb i:nth-child(2){animation-delay:1s}.orb i:nth-child(3){animation-delay:2s}
+@keyframes ring{0%{transform:scale(.7);opacity:.9}100%{transform:scale(2);opacity:0}}
+.orb .core{width:50%;aspect-ratio:1;border-radius:50%;background:#0b1a33;border:2px solid var(--cyan);display:flex;gap:6px;align-items:center;justify-content:center;box-shadow:0 0 60px #22d3ee55}
+.orb .core span{width:8px;border-radius:4px;background:var(--cyan);animation:eq 1.1s ease-in-out infinite}
+@keyframes eq{0%,100%{height:14px}50%{height:58px}}
+
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.metrics.hw{grid-template-columns:repeat(3,1fr);margin-top:16px}
+.m{padding:22px;position:relative;overflow:hidden}
+.m .lab{font-size:12px;font-weight:700;letter-spacing:2.5px}
+.m .val{font-size:44px;font-weight:800;line-height:1.1;margin:8px 0 4px}
+.m .val small{font-size:20px;margin-left:4px}
+.m .sub{color:var(--dim);font-size:13px}
+.bar{height:8px;background:#1e293b;border-radius:4px;margin-top:14px;overflow:hidden}
+.bar b{display:block;height:100%;width:0;border-radius:4px;transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+
+/* simulator */
+.sim{display:grid;grid-template-columns:1fr 340px;gap:20px}
+.words{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.word{padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:#0b1430;color:var(--text);cursor:pointer;font:600 15px inherit;font-family:inherit}
+.word:hover{border-color:var(--cyan)}
+.word.marvin{border-color:var(--green);color:#86efac}
+.word:disabled{opacity:.45;cursor:wait}
+.pipe{display:grid;gap:10px}
+.stage{display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#0b1430;transition:.35s}
+.stage .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#0b1430;background:#334155;transition:.35s}
+.stage h4{margin:0;font-size:15.5px}
+.stage p{margin:0;color:var(--muted);font-size:13px}
+.stage .res{font-size:13px;font-weight:700;min-width:120px;text-align:right}
+.stage.on{border-color:var(--cyan);box-shadow:0 0 24px #22d3ee33}
+.stage.on .n{background:var(--cyan)}
+.stage.pass .n{background:var(--green)}.stage.pass{border-color:#22c55e88}
+.stage.fail .n{background:var(--red)}.stage.fail{border-color:#ef444488}
+.stage.skip{opacity:.35}
+.scorebar{position:relative;height:8px;background:#1e293b;border-radius:4px;margin-top:8px;max-width:320px}
+.scorebar b{position:absolute;inset:0 auto 0 0;width:0;border-radius:4px;transition:width .7s}
+.scorebar i{position:absolute;top:-4px;bottom:-4px;width:2px;background:#f8fafc}
+.side{display:grid;gap:16px;align-content:start}
+.oled{background:#1e3a8a;border:1px solid var(--blue);border-radius:14px;padding:16px}
+.oled .scr{background:#020617;border-radius:6px;height:120px;display:grid;place-items:center;text-align:center;
+  font:800 17px 'JetBrains Mono',Consolas,monospace;color:#38bdf8;text-shadow:0 0 10px #38bdf8aa;padding:8px}
+.statebox{padding:16px}
+.states{display:flex;gap:8px;margin-top:10px}
+.states span{flex:1;text-align:center;padding:8px 4px;border-radius:10px;border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--dim);transition:.3s}
+.states span.act{color:#0b1430;background:var(--cyan);border-color:var(--cyan)}
+.states span.act.stream{background:var(--green);border-color:var(--green)}
+.privacy{font-size:13px;color:var(--muted);margin-top:10px}
+.privacy b{color:var(--green)}
+.log{font:12.5px/1.6 Consolas,monospace;color:var(--muted);height:150px;overflow:auto;padding:12px}
+.log div{white-space:pre-wrap}
+
+/* hardware */
+.hw-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start}
+.photo{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.photo img{display:block;width:100%}
+.hot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:2px solid #fff;background:#22d3ee88;cursor:pointer;padding:0}
+.hot::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--cyan);animation:ring 2s ease-out infinite}
+.hot.act{background:var(--amber)}
+.info{padding:22px}
+.info h3{margin:0 0 4px}
+.info .tag{color:var(--cyan);font-size:13px;font-weight:700;letter-spacing:1px}
+.info table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.info td{padding:7px 0;border-bottom:1px solid var(--line)}
+.info td:last-child{text-align:right;font-weight:700}
+.wiring{margin-top:20px;width:100%;border-radius:18px;display:block}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gal figure{margin:0}
+.gal img{width:100%;border-radius:14px;border:1px solid var(--line);display:block;transition:transform .3s}
+.gal img:hover{transform:scale(1.02)}
+.gal figcaption{color:var(--muted);font-size:13px;margin-top:6px}
+footer{padding:48px 0;color:var(--dim);text-align:center;font-size:14px}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:860px){
+  .hero,.sim,.hw-grid{grid-template-columns:1fr}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metrics.hw{grid-template-columns:1fr}
+  .gal{grid-template-columns:1fr}
+  .stage .res{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <b>MARVIN</b>
+  <a href="#results">Results</a><a href="#simulator">Try it</a><a href="#hardware">Hardware</a><a href="#workflow">Workflow</a><a href="#dashboard">Dashboard</a>
+  <a href="https://github.com/dharshan188/SIH26172--The-Learning-Loop">GitHub ↗</a>
+</div></nav>
+
+<header class="wrap hero">
+  <div>
+    <div class="kicker">SMART INDIA HACKATHON 2026 · SIH26172 · THE LEARNING LOOP</div>
+    <h1>MARVIN</h1>
+    <p>Listen locally. Connect when needed. A two-stage INT8 wake-word cascade that runs on a ₹400 ESP32 and sends no audio until it has verified you called it.</p>
+    <a class="btn" href="#simulator">Try the cascade</a>
+    <a class="btn" href="#hardware" style="border-color:var(--violet);background:#1e1038">Explore hardware</a>
+  </div>
+  <div class="orb" aria-hidden="true"><i></i><i></i><i></i>
+    <div class="core"><span></span><span style="animation-delay:.15s"></span><span style="animation-delay:.3s;background:var(--blue)"></span><span style="animation-delay:.45s;background:var(--violet)"></span><span style="animation-delay:.6s;background:#c084fc"></span></div>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="results" class="reveal">
+  <h2>Measured results</h2>
+  <p class="lead">Best INT8 model on the ESP32. All six on-device compliance targets were met.</p>
+  <div class="metrics">
+    <div class="card m"><div class="lab" style="color:var(--cyan)">ACCURACY</div><div class="val" data-to="99.5" data-dec="1">0<small style="color:var(--cyan)">%</small></div><div class="bar"><b style="background:var(--cyan)" data-w="99.5"></b></div></div>
+    <div class="card m"><div class="lab" style="color:var(--blue)">PRECISION</div><div class="val" data-to="95.9" data-dec="1">0<small style="color:var(--blue)">%</small></div><div class="bar"><b style="background:var(--blue)" data-w="95.9"></b></div></div>
+    <div class="card m"><div class="lab" style="color:var(--violet)">RECALL</div><div class="val" data-to="95.1" data-dec="1">0<small style="color:var(--violet)">%</small></div><div class="bar"><b style="background:var(--violet)" data-w="95.1"></b></div></div>
+    <div class="card m"><div class="lab" style="color:var(--pink)">F1 SCORE</div><div class="val" data-to="95.5" data-dec="1">0<small style="color:var(--pink)">%</small></div><div class="bar"><b style="background:var(--pink)" data-w="95.5"></b></div></div>
+  </div>
+  <div class="metrics hw">
+    <div class="card m"><div class="lab" style="color:var(--amber)">INFERENCE LATENCY</div><div class="val" data-to="50" data-dec="0" data-pre="~">0<small style="color:var(--amber)">ms</small></div><div class="sub">per window, no accelerator</div><div class="bar"><b style="background:var(--amber)" data-w="10"></b></div></div>
+    <div class="card m"><div class="lab" style="color:var(--green)">CPU USAGE</div><div class="val" data-to="7.4" data-dec="1">0<small style="color:var(--green)">%</small></div><div class="sub">listening continuously · 92 % headroom</div><div class="bar"><b style="background:var(--green)" data-w="7.4"></b></div></div>
+    <div class="card m"><div class="lab" style="color:var(--orange)">RAM USAGE</div><div class="val" data-to="114" data-dec="0" data-pre="~">0<small style="color:var(--orange)">KB</small></div><div class="sub">of 320 KB SRAM · no PSRAM</div><div class="bar"><b style="background:var(--orange)" data-w="35.6"></b></div></div>
+  </div>
+</section>
+
+<section id="simulator" class="reveal">
+  <h2>Try the cascade</h2>
+  <p class="lead">Pick something to "say". Watch it travel through the on-chip pipeline and see where it gets stopped. Scores are illustrative of the real behaviour.</p>
+  <div class="words" id="words"></div>
+  <div class="sim">
+    <div class="pipe" id="pipe"></div>
+    <div class="side">
+      <div class="oled"><div class="scr" id="oled">MARVIN READY</div><div style="font-size:12px;color:#bfdbfe;margin-top:8px">SH1106 OLED · I²C</div></div>
+      <div class="card statebox">
+        <div style="font-size:12px;font-weight:700;letter-spacing:2px;color:var(--dim)">STATE MACHINE</div>
+        <div class="states"><span id="stIdle">IDLE</span><span id="stListen" class="act">LISTENING</span><span id="stStream">STREAMING</span></div>
+        <div class="privacy">Audio sent to cloud: <b id="bytes">0 bytes</b></div>
+      </div>
+      <div class="card log" id="log"></div>
+    </div>
+  </div>
+</section>
+
+<section id="hardware" class="reveal">
+  <h2>Hardware</h2>
+  <p class="lead">The real prototype. Click the glowing points to explore each part.</p>
+  <div class="hw-grid">
+    <div class="photo" id="photo">
+      <img src="img/prototype_hd.jpg" alt="MARVIN breadboard prototype: ESP32, INMP441 mic and OLED">
+    </div>
+    <div class="card info" id="info"></div>
+  </div>
+  <img class="wiring" src="readme/hardware.svg" alt="Animated wiring diagram">
+</section>
+
+<section id="workflow" class="reveal">
+  <h2>End-to-end workflow</h2>
+  <p class="lead">Everything inside the dashed boundary runs on the ESP32. The cloud is reached only after Stage-2 confirms the wake word.</p>
+  <img src="readme/workflow.svg" alt="Animated MARVIN workflow" style="width:100%;border-radius:18px;display:block">
+  <img src="readme/cascade.svg" alt="Cascade rejecting look-alike words" style="width:100%;border-radius:18px;display:block;margin-top:20px">
+</section>
+
+<section id="dashboard" class="reveal">
+  <h2>Live dashboard</h2>
+  <p class="lead">React + Three.js. Offline benchmarks are kept visually separate from live ESP32 telemetry.</p>
+  <div class="gal">
+    <figure><img src="img/dash-live-monitor.jpg" alt="Live monitor" loading="lazy"><figcaption>Live Monitor: gauges, waveform, Log-Mel, pipeline, runtime</figcaption></figure>
+    <figure><img src="img/dash-home.jpg" alt="Home" loading="lazy"><figcaption>Home</figcaption></figure>
+    <figure><img src="img/dash-model-comparison.jpg" alt="Model comparison" loading="lazy"><figcaption>Model comparison vs TinyML baselines</figcaption></figure>
+    <figure><img src="img/dash-dataset.jpg" alt="Dataset manager" loading="lazy"><figcaption>Dataset manager</figcaption></figure>
+  </div>
+</section>
+</main>
+
+<footer>
+  <img src="img/sih-logo.png" alt="SIH" height="44"> &nbsp; <img src="img/isro-logo.svg" alt="ISRO" height="44"><br><br>
+  Team <b>The Learning Loop</b> (158994) · PSG Institute of Technology and Applied Research<br>
+  MARVIN: listen locally, connect when needed.
+</footer>
+
+<script>
+// ---------- reveal + count-up ----------
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');
+  e.target.querySelectorAll('[data-to]').forEach(countUp);e.target.querySelectorAll('[data-w]').forEach(b=>b.style.width=b.dataset.w+'%');io.unobserve(e.target)}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(s=>io.observe(s));
+function countUp(el){const to=+el.dataset.to,dec=+el.dataset.dec,pre=el.dataset.pre||'',unit=el.querySelector('small').outerHTML,t0=performance.now();
+  (function f(t){const p=Math.min((t-t0)/1600,1),e=1-Math.pow(1-p,3);el.innerHTML=pre+(to*e).toFixed(dec)+unit;if(p<1)requestAnimationFrame(f)})(t0)}
+
+// ---------- cascade simulator ----------
+const WORDS=[
+  {w:'Hey MARVIN, what is the weather?',s1:.82,s2:.91,ok:true,tx:'what is the weather?'},
+  {w:'Margin',s1:.71,s2:.22},{w:'Marine',s1:.64,s2:.15},{w:'Martin',s1:.68,s2:.31},
+  {w:'Nine',s1:.35},{w:'Door slam',s1:.66,spike:true},{w:'Background music',s1:.12}
+];
+const STAGES=[
+  ['INMP441 mic','I²S · 16 kHz mono into rolling buffer'],
+  ['Log-Mel frontend','FFT → mel → log · 98 × 24'],
+  ['Stage-1 Sentinel','INT8 CNN · threshold 0.60','s1',.60,'var(--cyan)'],
+  ['3-window gate','must fire across 3 windows'],
+  ['Stage-2 Judge','independent verifier · threshold 0.65','s2',.65,'var(--violet)'],
+  ['WebSocket stream','20 ms PCM16 frames · post-wake only'],
+  ['faster-whisper ASR','self-hosted transcription'],
+];
+const pipe=document.getElementById('pipe'),words=document.getElementById('words'),oled=document.getElementById('oled'),logEl=document.getElementById('log'),bytes=document.getElementById('bytes');
+STAGES.forEach((s,i)=>{const d=document.createElement('div');d.className='stage';d.innerHTML=
+  `<div class="n">${i+1}</div><div><h4>${s[0]}</h4><p>${s[1]}</p>${s[2]?`<div class="scorebar"><b style="background:${s[4]}"></b><i style="left:${s[3]*100}%"></i></div>`:''}</div><div class="res"></div>`;pipe.appendChild(d)});
+const rows=[...pipe.children];
+WORDS.forEach(o=>{const b=document.createElement('button');b.className='word'+(o.ok?' marvin':'');b.textContent=o.w;b.onclick=()=>run(o);words.appendChild(b)});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(m){const d=document.createElement('div');d.textContent=new Date().toLocaleTimeString()+'  '+m;logEl.prepend(d)}
+function setState(s){['stIdle','stListen','stStream'].forEach(id=>{const e=document.getElementById(id);e.className=''});
+  const e=document.getElementById({idle:'stIdle',listen:'stListen',stream:'stStream'}[s]);e.className='act'+(s==='stream'?' stream':'')}
+function mark(i,cls,res,color){rows[i].classList.remove('on');rows[i].classList.add(cls);const r=rows[i].querySelector('.res');r.textContent=res;r.style.color=color||''}
+async function run(o){
+  words.querySelectorAll('button').forEach(b=>b.disabled=true);
+  rows.forEach(r=>{r.className='stage';r.querySelector('.res').textContent='';const b=r.querySelector('.scorebar b');if(b)b.style.width=0});
+  setState('listen');bytes.textContent='0 bytes';oled.textContent='LISTENING';log(`heard: "${o.w}"`);
+  const step=async(i,ms=500)=>{rows[i].classList.add('on');await sleep(ms)};
+  await step(0);mark(0,'pass','captured','var(--green)');
+  await step(1);mark(1,'pass','98 × 24','var(--green)');
+  await step(2,200);rows[2].querySelector('.scorebar b').style.width=o.s1*100+'%';await sleep(700);
+  if(o.s1<.60){mark(2,'fail',`${o.s1.toFixed(2)} < 0.60`,'var(--red)');for(let i=3;i<7;i++)rows[i].classList.add('skip');
+    oled.textContent='MARVIN READY';log(`Stage-1 ${o.s1.toFixed(2)}: no candidate, stays asleep`);return done()}
+  mark(2,'pass',`${o.s1.toFixed(2)} ✓ candidate`,'var(--cyan)');
+  await step(3);
+  if(o.spike){mark(3,'fail','1 / 3 windows','var(--red)');for(let i=4;i<7;i++)rows[i].classList.add('skip');
+    oled.textContent='MARVIN READY';log('one-off spike: gate not met, Stage-2 never invoked');return done()}
+  mark(3,'pass','3 / 3 windows','var(--green)');oled.textContent='VERIFYING…';
+  await step(4,200);rows[4].querySelector('.scorebar b').style.width=o.s2*100+'%';await sleep(800);
+  if(!o.ok){mark(4,'fail',`${o.s2.toFixed(2)} ✕ rejected`,'var(--red)');for(let i=5;i<7;i++)rows[i].classList.add('skip');
+    oled.textContent='MARVIN READY';log(`Stage-2 ${o.s2.toFixed(2)}: look-alike rejected. 0 bytes sent`);return done()}
+  mark(4,'pass',`${o.s2.toFixed(2)} ✓ verified`,'var(--violet)');oled.textContent='MARVIN!';setState('stream');log('wake confirmed → STREAMING');
+  await step(5,200);let n=0;for(let k=0;k<12;k++){n+=640;bytes.textContent=n.toLocaleString()+' bytes (post-wake)';await sleep(90)}
+  mark(5,'pass','silence → end','var(--green)');
+  await step(6,700);mark(6,'pass','transcribed','var(--green)');
+  oled.innerHTML='<div><div style="font-size:12px;color:#94a3b8">you said:</div>'+o.tx+'</div>';log(`transcript: "${o.tx}"`);
+  await sleep(1200);setState('listen');done();
+}
+function done(){words.querySelectorAll('button').forEach(b=>b.disabled=false)}
+log('device booted · state LISTENING · waiting for MARVIN');
+
+// ---------- hardware hotspots ----------
+const PARTS=[
+  {x:56,y:36,name:'ESP32-WROOM-32',tag:'THE BRAIN',d:'Runs the Log-Mel frontend and both INT8 networks with TensorFlow Lite Micro. No PSRAM or accelerator is needed.',
+   t:[['CPU','2 × 240 MHz'],['SRAM','320 KB'],['RAM used by MARVIN','~114 KB'],['CPU while listening','7.4 %'],['Inference','~50 ms']]},
+  {x:14,y:76,name:'INMP441 MEMS mic',tag:'THE EAR',d:'A digital I²S microphone streaming 16 kHz mono audio into a rolling buffer. Nothing is stored or sent before a verified wake.',
+   t:[['SCK (BCLK)','GPIO 14'],['WS (LRCLK)','GPIO 15'],['SD (data)','GPIO 32'],['Power','3V3 · L/R → GND']]},
+  {x:67,y:72,name:'SH1106 OLED 128×64',tag:'THE FACE',d:'Shows the privacy state (READY → LISTENING → MARVIN! → transcript), so users always know when the device is active.',
+   t:[['Bus','I²C @ 0x3C'],['SDA','GPIO 21'],['SCL','GPIO 22'],['Power','3V3']]},
+  {x:71,y:32,name:'USB link to laptop',tag:'CONTROL + POWER',d:'Powers the board and carries START_LISTEN / STOP_LISTEN / SERVER commands at 115200 baud. Audio goes over Wi-Fi WebSocket only after a wake.',
+   t:[['Serial','115200 baud'],['Audio transport','WebSocket PCM16'],['Frame','20 ms'],['Stream ends','1.2 s silence / 9 s cap']]},
+];
+const photo=document.getElementById('photo'),info=document.getElementById('info');
+PARTS.forEach((p,i)=>{const b=document.createElement('button');b.className='hot';b.style.left=p.x+'%';b.style.top=p.y+'%';b.title=p.name;b.setAttribute('aria-label',p.name);b.onclick=()=>show(i);photo.appendChild(b)});
+function show(i){const p=PARTS[i];photo.querySelectorAll('.hot').forEach((h,j)=>h.classList.toggle('act',i===j));
+  info.innerHTML=`<div class="tag">${p.tag}</div><h3>${p.name}</h3><p style="color:var(--muted);margin:6px 0 0">${p.d}</p><table>${p.t.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`}
+show(0);
+</script>
+</body>
+</html>

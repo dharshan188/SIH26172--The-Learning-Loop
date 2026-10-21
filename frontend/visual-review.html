@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MARVIN visual comparison</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #06111d; color: #e9f4ff; font: 15px system-ui, sans-serif; }
+    header { padding: 20px; max-width: 1576px; margin: auto; }
+    h1 { margin: 0 0 10px; font-size: 23px; }
+    p { color: #adc8dc; line-height: 1.5; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    button { color: #c9e9ff; background: #05223a; border: 1px solid #12607d; padding: 10px 16px; border-radius: 7px; cursor: pointer; }
+    button[aria-pressed=true] { color: #001522; background: #00d6ed; }
+    label { display: flex; align-items: center; gap: 16px; }
+    input { width: min(450px, 50vw); }
+    .comparison { position: relative; max-width: 1536px; aspect-ratio: 3/2; margin: 0 auto 32px; --split: 50%; }
+    .comparison img { width: 100%; height: 100%; display: block; }
+    .implementation { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+    .divider { position: absolute; top: 0; bottom: 0; left: var(--split); border-left: 2px solid #fff; pointer-events: none; }
+    .caption { display: flex; justify-content: space-between; max-width: 1536px; margin: 12px auto; padding: 0 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MARVIN · Reference comparison</h1>
+    <p>All desktop captures use the exact 1536 × 1024 reference viewport. Unavailable live values are intentionally shown as --. Settings and About are intentionally removed.</p>
+    <nav aria-label="Choose page"></nav>
+    <label>Reveal implementation <input type="range" min="0" max="100" value="50" aria-label="Implementation reveal percentage"><output>50%</output></label>
+  </header>
+  <div class="caption"><span>Implementation (left)</span><span>Reference (right)</span></div>
+  <div class="comparison"><img class="reference" alt="Design reference"><img class="implementation" alt="Frontend screenshot"><div class="divider"></div></div>
+  <script type="module">
+    const pages = [ ['Home','home','home'], ['Live Monitor','live-monitor','live_monitor'], ['Model Comparison','model-comparison','model_comparison'], ['Audio Visualizer','audio-visualizer','audio_visualizer'], ['Dataset','dataset','dataset'] ];
+    const references = {
+      home: new URL('../design_refs/home.png', import.meta.url).href,
+      live_monitor: new URL('../design_refs/live_monitor.png', import.meta.url).href,
+      model_comparison: new URL('../design_refs/model_comparison.png', import.meta.url).href,
+      audio_visualizer: new URL('../design_refs/audio_visualizer.png', import.meta.url).href,
+      dataset: new URL('../design_refs/dataset.png', import.meta.url).href,
+    };
+    const navigation = document.querySelector('nav');
+    const reference = document.querySelector('.reference');
+    const implementation = document.querySelector('.implementation');
+    function selectPage(entry, button) {
+      reference.src = references[entry[2]];
+      implementation.src = `screenshots/${entry[1]}-1536.png`;
+      document.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    }
+    pages.forEach(entry => {
+      const button = document.createElement('button');
+      button.textContent = entry[0];
+      button.addEventListener('click', () => selectPage(entry, button));
+      navigation.append(button);
+    });
+    selectPage(pages[0], navigation.firstElementChild);
+    document.querySelector('input').addEventListener('input', event => {
+      document.querySelector('.comparison').style.setProperty('--split', `${event.target.value}%`);
+      document.querySelector('output').textContent = `${event.target.value}%`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" role="img" aria-label="MARVIN results: 99.5% accuracy, 95.9% precision, 95.1% recall, 95.5% F1, ~50 ms latency, 7.4% CPU, ~114 KB RAM">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#060d1f"/><stop offset="1" stop-color="#120b2c"/></linearGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<style>
+.t{font-family:'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif}
+.pop{opacity:0;animation:pop .8s ease forwards}
+@keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+</style></defs>
+<rect width="1200" height="560" rx="20" fill="url(#bg)"/>
+<g class="t">
+<text x="40" y="50" font-size="24" font-weight="800" fill="#e2e8f0">Measured results</text>
+<text x="40" y="76" font-size="14.5" fill="#94a3b8">MARVIN best INT8 model · all six ESP32 compliance targets met</text>
+<g transform="translate(1000 32)"><rect width="160" height="36" rx="18" fill="#052e1b" stroke="#22c55e"/><text x="80" y="24" text-anchor="middle" font-size="14" font-weight="800" fill="#4ade80" class="pulse">6 / 6 TARGETS MET</text></g>
+<text x="40" y="118" font-size="13" font-weight="700" fill="#64748b" letter-spacing="3">MODEL QUALITY</text>
+
+<g class="pop" style="animation-delay:0.00s">
+<rect x="40" y="132" width="260" height="196" rx="18" fill="#0d1b36" stroke="#1f3b63"/>
+<circle cx="170" cy="230" r="58" fill="none" stroke="#1e293b" stroke-width="12"/>
+<circle cx="170" cy="230" r="58" fill="none" stroke="#22d3ee" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="364.42" transform="rotate(-90 170 230)" filter="url(#glow)">
+<animate attributeName="stroke-dashoffset" values="364.42;1.82;1.82;364.42" keyTimes="0;.25;.92;1" dur="8s" begin="0.00s" repeatCount="indefinite" calcMode="spline" keySplines=".2 .8 .2 1;0 0 1 1;.4 0 1 1"/>
+</circle>
+<text x="170" y="240" text-anchor="middle" font-size="30" font-weight="800" fill="#f8fafc">99.5<tspan font-size="17" fill="#22d3ee">%</tspan></text>
+<text x="170" y="318" text-anchor="middle" font-size="14" font-weight="700" fill="#22d3ee" letter-spacing="2.5">ACCURACY</text>
+</g>
+<g class="pop" style="animation-delay:0.25s">
+<rect x="325" y="132" width="260" height="196" rx="18" fill="#0d1b36" stroke="#1f3b63"/>
+<circle cx="455" cy="230" r="58" fill="none" stroke="#1e293b" stroke-width="12"/>
+<circle cx="455" cy="230" r="58" fill="none" stroke="#60a5fa" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="364.42" transform="rotate(-90 455 230)" filter="url(#glow)">
+<animate attributeName="stroke-dashoffset" values="364.42;14.94;14.94;364.42" keyTimes="0;.25;.92;1" dur="8s" begin="0.25s" repeatCount="indefinite" calcMode="spline" keySplines=".2 .8 .2 1;0 0 1 1;.4 0 1 1"/>
+</circle>
+<text x="455" y="240" text-anchor="middle" font-size="30" font-weight="800" fill="#f8fafc">95.9<tspan font-size="17" fill="#60a5fa">%</tspan></text>
+<text x="455" y="318" text-anchor="middle" font-size="14" font-weight="700" fill="#60a5fa" letter-spacing="2.5">PRECISION</text>
+</g>
+<g class="pop" style="animation-delay:0.50s">
+<rect x="610" y="132" width="260" height="196" rx="18" fill="#0d1b36" stroke="#1f3b63"/>
+<circle cx="740" cy="230" r="58" fill="none" stroke="#1e293b" stroke-width="12"/>
+<circle cx="740" cy="230" r="58" fill="none" stroke="#a78bfa" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="364.42" transform="rotate(-90 740 230)" filter="url(#glow)">
+<animate attributeName="stroke-dashoffset" values="364.42;17.86;17.86;364.42" keyTimes="0;.25;.92;1" dur="8s" begin="0.50s" repeatCount="indefinite" calcMode="spline" keySplines=".2 .8 .2 1;0 0 1 1;.4 0 1 1"/>
+</circle>
+<text x="740" y="240" text-anchor="middle" font-size="30" font-weight="800" fill="#f8fafc">95.1<tspan font-size="17" fill="#a78bfa">%</tspan></text>
+<text x="740" y="318" text-anchor="middle" font-size="14" font-weight="700" fill="#a78bfa" letter-spacing="2.5">RECALL</text>
+</g>
+<g class="pop" style="animation-delay:0.75s">
+<rect x="895" y="132" width="260" height="196" rx="18" fill="#0d1b36" stroke="#1f3b63"/>
+<circle cx="1025" cy="230" r="58" fill="none" stroke="#1e293b" stroke-width="12"/>
+<circle cx="1025" cy="230" r="58" fill="none" stroke="#e879f9" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="364.42" transform="rotate(-90 1025 230)" filter="url(#glow)">
+<animate attributeName="stroke-dashoffset" values="364.42;16.40;16.40;364.42" keyTimes="0;.25;.92;1" dur="8s" begin="0.75s" repeatCount="indefinite" calcMode="spline" keySplines=".2 .8 .2 1;0 0 1 1;.4 0 1 1"/>
+</circle>
+<text x="1025" y="240" text-anchor="middle" font-size="30" font-weight="800" fill="#f8fafc">95.5<tspan font-size="17" fill="#e879f9">%</tspan></text>
+<text x="1025" y="318" text-anchor="middle" font-size="14" font-weight="700" fill="#e879f9" letter-spacing="2.5">F1 SCORE</text>
+</g>
+<text x="40" y="368" font-size="13" font-weight="700" fill="#64748b" letter-spacing="3">ON THE ESP32</text>
+<g class="pop" style="animation-delay:1.00s">
+<rect x="40" y="382" width="360" height="150" rx="18" fill="#0d1b36" stroke="#facc15" stroke-opacity=".45"/>
+<text x="64" y="418" font-size="13" font-weight="700" fill="#facc15" letter-spacing="2">INFERENCE LATENCY</text>
+<text x="64" y="470" font-size="44" font-weight="800" fill="#f8fafc">~50<tspan font-size="22" fill="#facc15" dx="6">ms</tspan></text>
+<text x="376" y="468" text-anchor="end" font-size="13" fill="#94a3b8">per window, no accelerator</text>
+<rect x="64" y="490" width="312" height="10" rx="5" fill="#1e293b"/>
+<rect x="64" y="490" width="0" height="10" rx="5" fill="#facc15" filter="url(#glow)">
+<animate attributeName="width" values="0;31.2;31.2;0" keyTimes="0;.25;.92;1" dur="8s" begin="1.00s" repeatCount="indefinite"/>
+</rect>
+<text x="64" y="520" font-size="12" fill="#64748b">budget 500 ms</text>
+</g>
+<g class="pop" style="animation-delay:1.25s">
+<rect x="420" y="382" width="360" height="150" rx="18" fill="#0d1b36" stroke="#34d399" stroke-opacity=".45"/>
+<text x="444" y="418" font-size="13" font-weight="700" fill="#34d399" letter-spacing="2">CPU USAGE</text>
+<text x="444" y="470" font-size="44" font-weight="800" fill="#f8fafc">7.4<tspan font-size="22" fill="#34d399" dx="6">%</tspan></text>
+<text x="756" y="468" text-anchor="end" font-size="13" fill="#94a3b8">while listening continuously</text>
+<rect x="444" y="490" width="312" height="10" rx="5" fill="#1e293b"/>
+<rect x="444" y="490" width="0" height="10" rx="5" fill="#34d399" filter="url(#glow)">
+<animate attributeName="width" values="0;23.1;23.1;0" keyTimes="0;.25;.92;1" dur="8s" begin="1.25s" repeatCount="indefinite"/>
+</rect>
+<text x="444" y="520" font-size="12" fill="#64748b">10 % limit · 92 % headroom</text>
+</g>
+<g class="pop" style="animation-delay:1.50s">
+<rect x="800" y="382" width="360" height="150" rx="18" fill="#0d1b36" stroke="#fb923c" stroke-opacity=".45"/>
+<text x="824" y="418" font-size="13" font-weight="700" fill="#fb923c" letter-spacing="2">RAM USAGE</text>
+<text x="824" y="470" font-size="44" font-weight="800" fill="#f8fafc">~114<tspan font-size="22" fill="#fb923c" dx="6">KB</tspan></text>
+<text x="1136" y="468" text-anchor="end" font-size="13" fill="#94a3b8">of 320 KB ESP32 SRAM</text>
+<rect x="824" y="490" width="312" height="10" rx="5" fill="#1e293b"/>
+<rect x="824" y="490" width="0" height="10" rx="5" fill="#fb923c" filter="url(#glow)">
+<animate attributeName="width" values="0;111.2;111.2;0" keyTimes="0;.25;.92;1" dur="8s" begin="1.50s" repeatCount="indefinite"/>
+</rect>
+<text x="824" y="520" font-size="12" fill="#64748b">no PSRAM required</text>
+</g>
+</g></svg>

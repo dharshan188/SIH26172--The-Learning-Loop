@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="MARVIN — Listen locally, connect when needed">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050b1a"/>
+      <stop offset="0.55" stop-color="#0a1630"/>
+      <stop offset="1" stop-color="#140a2e"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" x2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="0.5" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#c084fc"/>
+      <animate attributeName="x1" values="0;-1;0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="1;2;1" dur="6s" repeatCount="indefinite"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e3a5f" stroke-width="0.6" opacity="0.5"/>
+    </pattern>
+    <style>
+      .t{font-family:'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif}
+      .bar{fill:#22d3ee;transform-box:fill-box;transform-origin:center;animation:eq 1.2s ease-in-out infinite}
+      @keyframes eq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+      .ring{fill:none;stroke:#22d3ee;transform-box:fill-box;transform-origin:center;animation:ring 3s ease-out infinite}
+      @keyframes ring{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+      .fade{opacity:0;animation:fade 1s ease forwards}
+      @keyframes fade{to{opacity:1}}
+      .chip{animation:fade 1s ease forwards;opacity:0}
+      .blink{animation:blink 1.6s steps(2) infinite}
+      @keyframes blink{50%{opacity:0}}
+      .scan{animation:scan 5s linear infinite}
+      @keyframes scan{from{transform:translateX(-200px)}to{transform:translateX(1400px)}}
+    </style>
+  </defs>
+
+  <rect width="1200" height="340" rx="22" fill="url(#bg)"/>
+  <rect width="1200" height="340" rx="22" fill="url(#grid)"/>
+  <rect class="scan" x="0" y="0" width="140" height="340" fill="#22d3ee" opacity="0.05"/>
+
+  <!-- Mic orb -->
+  <g transform="translate(170 170)">
+    <circle r="120" fill="url(#glow)"/>
+    <circle class="ring" r="48" stroke-width="2"/>
+    <circle class="ring" r="48" stroke-width="2" style="animation-delay:1s"/>
+    <circle class="ring" r="48" stroke-width="2" style="animation-delay:2s"/>
+    <circle r="54" fill="#0b1a33" stroke="#22d3ee" stroke-width="2.5"/>
+    <g transform="translate(-33 -26)">
+      <rect class="bar" x="0"  y="14" width="7" height="24" rx="3.5" style="animation-delay:0s"/>
+      <rect class="bar" x="11" y="4"  width="7" height="44" rx="3.5" style="animation-delay:.15s"/>
+      <rect class="bar" x="22" y="-6" width="7" height="64" rx="3.5" style="animation-delay:.3s;fill:#60a5fa"/>
+      <rect class="bar" x="33" y="0"  width="7" height="52" rx="3.5" style="animation-delay:.45s;fill:#818cf8"/>
+      <rect class="bar" x="44" y="8"  width="7" height="36" rx="3.5" style="animation-delay:.6s;fill:#a78bfa"/>
+      <rect class="bar" x="55" y="16" width="7" height="20" rx="3.5" style="animation-delay:.75s;fill:#c084fc"/>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <g class="t">
+    <text x="330" y="104" font-size="15" fill="#7dd3fc" letter-spacing="4" class="fade">SMART INDIA HACKATHON 2026 · SIH26172</text>
+    <text x="326" y="200" font-size="92" font-weight="800" fill="url(#title)" letter-spacing="4">MARVIN</text>
+    <text x="330" y="244" font-size="26" fill="#e2e8f0" class="fade" style="animation-delay:.4s">Listen locally<tspan fill="#22d3ee">.</tspan> Connect when needed<tspan fill="#c084fc">.</tspan><tspan fill="#22d3ee" class="blink"> ▍</tspan></text>
+    <text x="330" y="280" font-size="16" fill="#94a3b8" class="fade" style="animation-delay:.8s">Two-stage INT8 wake-word cascade on a ₹400 ESP32</text>
+  </g>
+
+  <!-- Stat chips -->
+  <g class="t" font-size="15" font-weight="600">
+    <g class="chip" style="animation-delay:1.0s" transform="translate(905 70)">
+      <rect width="250" height="44" rx="22" fill="#0e7490" fill-opacity="0.25" stroke="#22d3ee"/>
+      <text x="125" y="28" text-anchor="middle" fill="#a5f3fc">~50 ms on-chip inference</text>
+    </g>
+    <g class="chip" style="animation-delay:1.3s" transform="translate(905 126)">
+      <rect width="250" height="44" rx="22" fill="#4c1d95" fill-opacity="0.3" stroke="#a78bfa"/>
+      <text x="125" y="28" text-anchor="middle" fill="#ddd6fe">17 KB INT8 · 20.7 K params</text>
+    </g>
+    <g class="chip" style="animation-delay:1.6s" transform="translate(905 182)">
+      <rect width="250" height="44" rx="22" fill="#065f46" fill-opacity="0.3" stroke="#34d399"/>
+      <text x="125" y="28" text-anchor="middle" fill="#a7f3d0">99.5 % accuracy · 95.5 % F1</text>
+    </g>
+    <g class="chip" style="animation-delay:1.9s" transform="translate(905 238)">
+      <rect width="250" height="44" rx="22" fill="#7c2d12" fill-opacity="0.3" stroke="#fb923c"/>
+      <text x="125" y="28" text-anchor="middle" fill="#fed7aa">No audio leaves before wake</text>
+    </g>
+  </g>
+
+  <!-- Bottom waveform -->
+  <path d="M0 322 Q 25 312 50 322 T 100 322 T 150 322 T 200 322 T 250 322 T 300 322 T 350 322 T 400 322 T 450 322 T 500 322 T 550 322 T 600 322 T 650 322 T 700 322 T 750 322 T 800 322 T 850 322 T 900 322 T 950 322 T 1000 322 T 1050 322 T 1100 322 T 1150 322 T 1200 322 T 1250 322 T 1300 322" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0.6">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="-100 0" dur="2s" repeatCount="indefinite"/>
+  </path>
+</svg>

@@ -1,0 +1,29 @@
+[0-750] frame 0 (1/750) 0.32s/frame
+[750-1500] frame 750 (1/750) 1.02s/frame
+[0-750] frame 60 (61/750) 0.12s/frame
+[750-1500] frame 810 (61/750) 0.15s/frame
+[0-750] frame 120 (121/750) 0.13s/frame
+[750-1500] frame 870 (121/750) 0.15s/frame
+[0-750] frame 180 (181/750) 0.13s/frame
+[750-1500] frame 930 (181/750) 0.15s/frame
+[0-750] frame 240 (241/750) 0.13s/frame
+[750-1500] frame 990 (241/750) 0.14s/frame
+[0-750] frame 300 (301/750) 0.13s/frame
+[750-1500] frame 1050 (301/750) 0.14s/frame
+[0-750] frame 360 (361/750) 0.13s/frame
+[750-1500] frame 1110 (361/750) 0.14s/frame
+[0-750] frame 420 (421/750) 0.13s/frame
+[750-1500] frame 1170 (421/750) 0.14s/frame
+[0-750] frame 480 (481/750) 0.13s/frame
+[750-1500] frame 1230 (481/750) 0.14s/frame
+[0-750] frame 540 (541/750) 0.13s/frame
+[750-1500] frame 1290 (541/750) 0.13s/frame
+[0-750] frame 600 (601/750) 0.13s/frame
+[750-1500] frame 1350 (601/750) 0.13s/frame
+[0-750] frame 660 (661/750) 0.13s/frame
+[750-1500] frame 1410 (661/750) 0.13s/frame
+[0-750] frame 720 (721/750) 0.13s/frame
+[750-1500] frame 1470 (721/750) 0.14s/frame
+ERRORS: ['Failed to load resource: the server responded with a status of 404 (File not found)']
+ERRORS: ['Failed to load resource: the server responded with a status of 404 (File not found)']
+DONE /home/dharshan/sih/video/out/MARVIN_SIH2026_Impact_1080p.mp4

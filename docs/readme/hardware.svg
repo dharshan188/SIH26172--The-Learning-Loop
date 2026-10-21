@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" role="img" aria-label="MARVIN hardware wiring: INMP441 to ESP32 over I2S, SH1106 OLED over I2C">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#060d1f"/><stop offset="1" stop-color="#0d0b26"/></linearGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#1e3a5f"/></pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      .t{font-family:'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif}
+      .m{font-family:'JetBrains Mono',Consolas,'Courier New',monospace}
+      .w{fill:none;stroke-width:3.2;stroke-linecap:round}
+      .lbl{font-size:12.5px;font-weight:700}
+      .pin{fill:#cbd5e1}
+      .oled{opacity:0}
+      .o1{animation:o1 10s infinite}.o2{animation:o2 10s infinite}.o3{animation:o3 10s infinite}.o4{animation:o4 10s infinite}
+      @keyframes o1{0%,24%{opacity:1}25%,100%{opacity:0}}
+      @keyframes o2{0%,24%{opacity:0}25%,49%{opacity:1}50%,100%{opacity:0}}
+      @keyframes o3{0%,49%{opacity:0}50%,69%{opacity:1}70%,100%{opacity:0}}
+      @keyframes o4{0%,69%{opacity:0}70%,99%{opacity:1}100%{opacity:0}}
+      .wifi{opacity:0;animation:wifi 10s infinite}
+      @keyframes wifi{0%,52%{opacity:0}55%{opacity:1}68%{opacity:1}70%,100%{opacity:0}}
+      .led{animation:led 1.2s steps(2) infinite}
+      @keyframes led{50%{opacity:.25}}
+    </style>
+  </defs>
+  <rect width="1200" height="560" rx="20" fill="url(#bg)"/>
+  <rect width="1200" height="560" rx="20" fill="url(#dots)" opacity=".6"/>
+
+  <g class="t">
+    <text x="40" y="48" font-size="24" font-weight="800" fill="#e2e8f0">Hardware · ₹400-class bill of materials</text>
+    <text x="40" y="74" font-size="14.5" fill="#94a3b8">ESP32-WROOM-32 DevKit · INMP441 I²S MEMS mic · SH1106 128×64 OLED · no PSRAM, no NPU</text>
+  </g>
+
+  <!-- ===== Wires (drawn first, under the boards) ===== -->
+  <!-- INMP441 → ESP32 -->
+  <path id="wVDD" class="w" stroke="#ef4444" d="M262 222 C 360 222, 380 214, 470 214"/>
+  <path id="wGND" class="w" stroke="#64748b" d="M262 250 C 360 250, 380 244, 470 244"/>
+  <path id="wSCK" class="w" stroke="#facc15" d="M262 278 C 360 278, 380 284, 470 284"/>
+  <path id="wWS"  class="w" stroke="#22c55e" d="M262 306 C 360 306, 380 314, 470 314"/>
+  <path id="wSD"  class="w" stroke="#a855f7" d="M262 334 C 360 334, 380 344, 470 344"/>
+  <!-- ESP32 → OLED -->
+  <path id="wV2"  class="w" stroke="#ef4444" d="M730 230 C 830 230, 840 236, 918 236"/>
+  <path id="wG2"  class="w" stroke="#64748b" d="M730 260 C 830 260, 840 264, 918 264"/>
+  <path id="wSCL" class="w" stroke="#3b82f6" d="M730 290 C 830 290, 840 292, 918 292"/>
+  <path id="wSDA" class="w" stroke="#22d3ee" d="M730 320 C 830 320, 840 320, 918 320"/>
+
+  <!-- clock ticks on SCK / WS -->
+  <path class="w" stroke="#fef08a" stroke-width="3.2" stroke-dasharray="3 9" d="M262 278 C 360 278, 380 284, 470 284"><animate attributeName="stroke-dashoffset" from="0" to="-24" dur=".4s" repeatCount="indefinite"/></path>
+  <path class="w" stroke="#bbf7d0" stroke-width="3.2" stroke-dasharray="3 21" d="M262 306 C 360 306, 380 314, 470 314"><animate attributeName="stroke-dashoffset" from="0" to="-48" dur="1s" repeatCount="indefinite"/></path>
+
+  <!-- audio packets on SD (mic → ESP32) -->
+  <g fill="#e9d5ff" filter="url(#glow)">
+    <circle r="5"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#wSD"/></animateMotion></circle>
+    <circle r="5"><animateMotion dur="1.2s" begin=".4s" repeatCount="indefinite"><mpath href="#wSD"/></animateMotion></circle>
+    <circle r="5"><animateMotion dur="1.2s" begin=".8s" repeatCount="indefinite"><mpath href="#wSD"/></animateMotion></circle>
+  </g>
+  <!-- I2C data packets on SDA (ESP32 → OLED) -->
+  <g fill="#a5f3fc" filter="url(#glow)">
+    <rect x="-6" y="-4" width="12" height="8" rx="2"><animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#wSDA"/></animateMotion></rect>
+    <rect x="-6" y="-4" width="12" height="8" rx="2"><animateMotion dur="2.5s" begin="1.25s" repeatCount="indefinite"><mpath href="#wSDA"/></animateMotion></rect>
+  </g>
+
+  <!-- ===== INMP441 ===== -->
+  <g transform="translate(80 190)">
+    <rect width="182" height="168" rx="14" fill="#0b3b6f" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="70" cy="84" r="40" fill="#0f172a" stroke="#94a3b8" stroke-width="2"/>
+    <circle cx="70" cy="84" r="14" fill="#334155"/>
+    <circle cx="70" cy="84" r="22" fill="none" stroke="#22d3ee" stroke-width="2"><animate attributeName="r" values="18;40;18" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1.6s" repeatCount="indefinite"/></circle>
+    <g class="m lbl">
+      <text x="176" y="36" text-anchor="end" class="pin">VDD</text>
+      <text x="176" y="64" text-anchor="end" class="pin">GND</text>
+      <text x="176" y="92" text-anchor="end" class="pin">SCK</text>
+      <text x="176" y="120" text-anchor="end" class="pin">WS</text>
+      <text x="176" y="148" text-anchor="end" class="pin">SD</text>
+    </g>
+    <text class="t" x="0" y="196" font-size="16" font-weight="800" fill="#e2e8f0">INMP441</text>
+    <text class="t" x="0" y="216" font-size="12.5" fill="#94a3b8">24-bit I²S MEMS mic · 16 kHz</text>
+  </g>
+
+  <!-- ===== ESP32 DevKit ===== -->
+  <g transform="translate(470 160)">
+    <rect width="260" height="250" rx="14" fill="#111827" stroke="#334155" stroke-width="2"/>
+    <rect x="58" y="28" width="144" height="122" rx="6" fill="#9ca3af"/>
+    <rect x="66" y="36" width="128" height="106" rx="4" fill="#d1d5db"/>
+    <text class="t" x="130" y="82" text-anchor="middle" font-size="15" font-weight="800" fill="#1f2937">ESP32</text>
+    <text class="t" x="130" y="102" text-anchor="middle" font-size="11" fill="#374151">WROOM-32</text>
+    <text class="t" x="130" y="122" text-anchor="middle" font-size="10" fill="#4b5563">240 MHz · 320 KB SRAM</text>
+    <rect x="104" y="214" width="52" height="26" rx="4" fill="#9ca3af"/>
+    <circle cx="214" cy="190" r="6" fill="#ef4444" class="led" filter="url(#glow)"/>
+    <text class="t" x="130" y="172" text-anchor="middle" font-size="10.5" fill="#64748b">TFLite Micro · INT8</text>
+    <g class="m lbl">
+      <text x="10" y="58" class="pin">3V3</text>
+      <text x="10" y="88" class="pin">GND</text>
+      <text x="10" y="128" fill="#fde047">G14</text>
+      <text x="10" y="158" fill="#86efac">G15</text>
+      <text x="10" y="188" fill="#d8b4fe">G32</text>
+      <text x="250" y="74" text-anchor="end" class="pin">3V3</text>
+      <text x="250" y="104" text-anchor="end" class="pin">GND</text>
+      <text x="250" y="134" text-anchor="end" fill="#93c5fd">G22</text>
+      <text x="250" y="164" text-anchor="end" fill="#67e8f9">G21</text>
+    </g>
+    <!-- Wi-Fi arcs: only after wake confirmed -->
+    <g class="wifi" transform="translate(130 -6)" fill="none" stroke="#c084fc" stroke-width="3" stroke-linecap="round">
+      <path d="M-14 -10 A20 20 0 0 1 14 -10"/>
+      <path d="M-26 -22 A36 36 0 0 1 26 -22"/>
+      <path d="M-38 -34 A52 52 0 0 1 38 -34"/>
+      <text class="t" x="0" y="-52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e9d5ff" stroke="none">Wi-Fi · PCM16 → ASR (post-wake only)</text>
+    </g>
+    <text class="t" x="0" y="276" font-size="16" font-weight="800" fill="#e2e8f0">ESP32 DevKit V1</text>
+    <text class="t" x="0" y="296" font-size="12.5" fill="#94a3b8">Log-Mel + Stage-1 + Stage-2 all on-chip</text>
+  </g>
+
+  <!-- ===== OLED ===== -->
+  <g transform="translate(918 196)">
+    <rect width="230" height="160" rx="12" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.5"/>
+    <rect x="26" y="20" width="188" height="104" rx="4" fill="#020617"/>
+    <g class="m" text-anchor="middle" font-weight="800" filter="url(#glow)">
+      <g class="oled o1"><text x="120" y="78" font-size="17" fill="#38bdf8">MARVIN READY</text></g>
+      <g class="oled o2"><text x="120" y="66" font-size="15" fill="#38bdf8">LISTENING</text><text x="120" y="92" font-size="12" fill="#64748b">stage-1 0.82 ▲</text></g>
+      <g class="oled o3"><text x="120" y="66" font-size="18" fill="#a5f3fc">MARVIN!</text><text x="120" y="92" font-size="12" fill="#c084fc">verified 0.91</text></g>
+      <g class="oled o4"><text x="120" y="64" font-size="12" fill="#94a3b8">you said:</text><text x="120" y="88" font-size="13" fill="#38bdf8">what is the</text><text x="120" y="106" font-size="13" fill="#38bdf8">weather?</text></g>
+    </g>
+    <g class="m lbl">
+      <text x="10" y="44" class="pin">VCC</text>
+      <text x="10" y="72" class="pin">GND</text>
+      <text x="10" y="100" fill="#93c5fd">SCL</text>
+      <text x="10" y="128" fill="#67e8f9">SDA</text>
+    </g>
+    <text class="t" x="0" y="186" font-size="16" font-weight="800" fill="#e2e8f0">SH1106 OLED</text>
+    <text class="t" x="0" y="206" font-size="12.5" fill="#94a3b8">I²C 0x3C · visible privacy state</text>
+  </g>
+
+  <!-- Bus legend -->
+  <g class="t" transform="translate(40 470)">
+    <rect width="1120" height="62" rx="14" fill="#0d1b36" stroke="#1f3b63"/>
+    <g font-size="13.5" font-weight="600">
+      <circle cx="28" cy="31" r="6" fill="#facc15"/><text x="42" y="36" fill="#cbd5e1">SCK → GPIO 14</text>
+      <circle cx="186" cy="31" r="6" fill="#22c55e"/><text x="200" y="36" fill="#cbd5e1">WS → GPIO 15</text>
+      <circle cx="338" cy="31" r="6" fill="#a855f7"/><text x="352" y="36" fill="#cbd5e1">SD → GPIO 32</text>
+      <circle cx="490" cy="31" r="6" fill="#3b82f6"/><text x="504" y="36" fill="#cbd5e1">SCL → GPIO 22</text>
+      <circle cx="646" cy="31" r="6" fill="#22d3ee"/><text x="660" y="36" fill="#cbd5e1">SDA → GPIO 21</text>
+      <circle cx="802" cy="31" r="6" fill="#ef4444"/><text x="816" y="36" fill="#cbd5e1">3V3</text>
+      <circle cx="872" cy="31" r="6" fill="#64748b"/><text x="886" y="36" fill="#cbd5e1">GND (+ mic L/R)</text>
+    </g>
+  </g>
+</svg>

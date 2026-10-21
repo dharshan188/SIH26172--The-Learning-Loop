@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Two-stage cascade rejects look-alike words and accepts MARVIN">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#060d1f"/><stop offset="1" stop-color="#120b2c"/></linearGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<style>.t{font-family:'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif}
+.v{opacity:0;animation:v 12s infinite}
+@keyframes v{0%{opacity:0}4%{opacity:1}92%{opacity:1}100%{opacity:0}}
+.row{animation:row 12s infinite}
+</style></defs>
+<rect width="1200" height="520" rx="20" fill="url(#bg)"/>
+<g class="t">
+<text x="40" y="48" font-size="24" font-weight="800" fill="#e2e8f0">Why two stages? Look-alike words never get through</text>
+<text x="40" y="74" font-size="14.5" fill="#94a3b8">Stage-1 is tuned to never miss MARVIN; Stage-2 is an independent judge tuned to reject near-misses (illustrative scores)</text>
+<text x="40" y="118" font-size="13" font-weight="700" fill="#64748b" letter-spacing="2">SPOKEN</text>
+<text x="250" y="118" font-size="13" font-weight="700" fill="#38bdf8" letter-spacing="2">STAGE-1 SENTINEL · τ 0.60</text>
+<text x="640" y="118" font-size="13" font-weight="700" fill="#c084fc" letter-spacing="2">STAGE-2 JUDGE · τ 0.65</text>
+<text x="1010" y="118" font-size="13" font-weight="700" fill="#64748b" letter-spacing="2">RESULT</text>
+
+<g>
+<rect x="28" y="140" width="1144" height="60" rx="14" fill="#0d1b36" stroke="#1f3b63" stroke-opacity="1"/>
+<text x="48" y="178" font-size="19" font-weight="800" fill="#e2e8f0">“MARGIN”</text>
+<rect x="250" y="162" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="250" y="162" width="0" height="16" rx="8" fill="#38bdf8" filter="url(#glow)"><animate attributeName="width" values="0;0;213.0;213.0;0" keyTimes="0;0.000;0.060;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="562" y="176" font-size="15" font-weight="800" fill="#38bdf8">0.71</text>
+<line x1="430.0" x2="430.0" y1="154" y2="186" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<rect x="640" y="162" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="640" y="162" width="0" height="16" rx="8" fill="#f87171" filter="url(#glow)"><animate attributeName="width" values="0;0;66.0;66.0;0" keyTimes="0;0.067;0.127;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="952" y="176" font-size="15" font-weight="800" fill="#f87171">0.22</text>
+<line x1="835.0" x2="835.0" y1="154" y2="186" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.142;0.162;.94;1" dur="12s" repeatCount="indefinite"/><rect x="1000" y="153" width="156" height="34" rx="17" fill="#3b0d0d" stroke="#ef4444"/><text x="1078" y="175" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fca5a5">REJECTED</text></g>
+</g>
+<g>
+<rect x="28" y="212" width="1144" height="60" rx="14" fill="#0d1b36" stroke="#1f3b63" stroke-opacity="1"/>
+<text x="48" y="250" font-size="19" font-weight="800" fill="#e2e8f0">“MARINE”</text>
+<rect x="250" y="234" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="250" y="234" width="0" height="16" rx="8" fill="#38bdf8" filter="url(#glow)"><animate attributeName="width" values="0;0;192.0;192.0;0" keyTimes="0;0.167;0.227;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="562" y="248" font-size="15" font-weight="800" fill="#38bdf8">0.64</text>
+<line x1="430.0" x2="430.0" y1="226" y2="258" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<rect x="640" y="234" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="640" y="234" width="0" height="16" rx="8" fill="#f87171" filter="url(#glow)"><animate attributeName="width" values="0;0;45.0;45.0;0" keyTimes="0;0.233;0.293;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="952" y="248" font-size="15" font-weight="800" fill="#f87171">0.15</text>
+<line x1="835.0" x2="835.0" y1="226" y2="258" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.308;0.328;.94;1" dur="12s" repeatCount="indefinite"/><rect x="1000" y="225" width="156" height="34" rx="17" fill="#3b0d0d" stroke="#ef4444"/><text x="1078" y="247" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fca5a5">REJECTED</text></g>
+</g>
+<g>
+<rect x="28" y="284" width="1144" height="60" rx="14" fill="#0d1b36" stroke="#1f3b63" stroke-opacity="1"/>
+<text x="48" y="322" font-size="19" font-weight="800" fill="#e2e8f0">“MARTIN”</text>
+<rect x="250" y="306" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="250" y="306" width="0" height="16" rx="8" fill="#38bdf8" filter="url(#glow)"><animate attributeName="width" values="0;0;204.0;204.0;0" keyTimes="0;0.333;0.393;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="562" y="320" font-size="15" font-weight="800" fill="#38bdf8">0.68</text>
+<line x1="430.0" x2="430.0" y1="298" y2="330" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<rect x="640" y="306" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="640" y="306" width="0" height="16" rx="8" fill="#f87171" filter="url(#glow)"><animate attributeName="width" values="0;0;93.0;93.0;0" keyTimes="0;0.400;0.460;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="952" y="320" font-size="15" font-weight="800" fill="#f87171">0.31</text>
+<line x1="835.0" x2="835.0" y1="298" y2="330" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.475;0.495;.94;1" dur="12s" repeatCount="indefinite"/><rect x="1000" y="297" width="156" height="34" rx="17" fill="#3b0d0d" stroke="#ef4444"/><text x="1078" y="319" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fca5a5">REJECTED</text></g>
+</g>
+<g>
+<rect x="28" y="356" width="1144" height="60" rx="14" fill="#0d1b36" stroke="#1f3b63" stroke-opacity="1"/>
+<text x="48" y="394" font-size="19" font-weight="800" fill="#e2e8f0">“NINE”</text>
+<rect x="250" y="378" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="250" y="378" width="0" height="16" rx="8" fill="#f87171" filter="url(#glow)"><animate attributeName="width" values="0;0;105.0;105.0;0" keyTimes="0;0.500;0.560;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="562" y="392" font-size="15" font-weight="800" fill="#f87171">0.35</text>
+<line x1="430.0" x2="430.0" y1="370" y2="402" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<rect x="640" y="378" width="300" height="16" rx="8" fill="#1e293b"/>
+<text x="652" y="391" font-size="13" fill="#64748b" font-style="italic">not invoked — blocked by Stage-1 gate</text>
+
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.575;0.595;.94;1" dur="12s" repeatCount="indefinite"/><rect x="1000" y="369" width="156" height="34" rx="17" fill="#1e293b" stroke="#64748b"/><text x="1078" y="391" text-anchor="middle" font-size="13.5" font-weight="800" fill="#cbd5e1">IGNORED</text></g>
+</g>
+<g>
+<rect x="28" y="428" width="1144" height="60" rx="14" fill="#0b2a22" stroke="#22c55e" stroke-opacity="0.8"/>
+<text x="48" y="466" font-size="19" font-weight="800" fill="#86efac">“Hey MARVIN”</text>
+<rect x="250" y="450" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="250" y="450" width="0" height="16" rx="8" fill="#38bdf8" filter="url(#glow)"><animate attributeName="width" values="0;0;246.0;246.0;0" keyTimes="0;0.667;0.727;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="562" y="464" font-size="15" font-weight="800" fill="#38bdf8">0.82</text>
+<line x1="430.0" x2="430.0" y1="442" y2="474" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<rect x="640" y="450" width="300" height="16" rx="8" fill="#1e293b"/>
+<rect x="640" y="450" width="0" height="16" rx="8" fill="#c084fc" filter="url(#glow)"><animate attributeName="width" values="0;0;273.0;273.0;0" keyTimes="0;0.733;0.793;.94;1" dur="12s" repeatCount="indefinite"/></rect>
+<text x="952" y="464" font-size="15" font-weight="800" fill="#c084fc">0.91</text>
+<line x1="835.0" x2="835.0" y1="442" y2="474" stroke="#f8fafc" stroke-width="2" stroke-dasharray="3 3"/>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.808;0.828;.94;1" dur="12s" repeatCount="indefinite"/><rect x="1000" y="441" width="156" height="34" rx="17" fill="#052e1b" stroke="#22c55e"/><text x="1078" y="463" text-anchor="middle" font-size="13.5" font-weight="800" fill="#4ade80">ACCEPTED</text></g>
+</g>
+</g></svg>

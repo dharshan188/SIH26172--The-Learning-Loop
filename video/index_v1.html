@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>MARVIN Film</title>
+<script type="importmap">
+{"imports":{"three":"/frontend/node_modules/three/build/three.module.js","three/addons/":"/frontend/node_modules/three/examples/jsm/"}}
+</script>
+<style>
+@font-face{font-family:'Space Grotesk';src:url(fonts/SpaceGrotesk.ttf) format('truetype');font-weight:300 700}
+@font-face{font-family:'Inter';src:url(fonts/Inter.ttf) format('truetype');font-weight:100 900}
+html,body{margin:0;background:#13294f;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;color:#ffffff;-webkit-font-smoothing:antialiased}
+.sec *{text-shadow:0 2px 16px rgba(4,10,28,.75),0 1px 3px rgba(4,10,28,.6)}
+.sec h2 em,.sec .title span{text-shadow:none}
+.sec h2 em{filter:drop-shadow(0 2px 10px rgba(4,10,28,.55))}
+#gl{position:absolute;inset:0;width:1920px;height:1080px;display:block}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 85% at 50% 50%,transparent 62%,rgba(6,14,34,.45) 100%)}
+.leftshade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,18,42,.55) 0%,rgba(8,18,42,.25) 32%,transparent 50%);opacity:0}
+#fade{position:absolute;inset:0;background:#000;pointer-events:none}
+.sec{position:absolute;inset:0;opacity:0;pointer-events:none}
+[data-in]{will-change:opacity,transform}
+
+/* Shared type */
+.kicker{display:flex;align-items:center;gap:16px;font:600 22px 'Space Grotesk';letter-spacing:.32em;color:#9eefff;text-transform:uppercase}
+.kicker .bar{width:64px;height:2px;background:linear-gradient(90deg,#22e4ff,transparent)}
+.kicker.red{color:#ffb3a6}.kicker.red .bar{background:linear-gradient(90deg,#ff4b3e,transparent)}
+h2{font:700 70px/1.05 'Space Grotesk';letter-spacing:-.02em;margin:24px 0 26px;color:#f3fbff}
+h2 em{font-style:normal;text-shadow:none;background:linear-gradient(90deg,#8ff0ff,#c6aaff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2 em.red{background:linear-gradient(90deg,#ffb08a,#ff8fa0);-webkit-background-clip:text;background-clip:text}
+.body{font:400 28px/1.5 Inter;color:#e3eefa;margin:0}
+.col{position:absolute;left:96px;top:196px;width:760px;padding:40px 44px 44px;border-radius:32px;background:linear-gradient(135deg,rgba(14,30,64,.62),rgba(10,22,50,.42));border:1px solid rgba(170,215,255,.22);backdrop-filter:blur(16px) saturate(120%);box-shadow:0 30px 80px rgba(4,10,28,.35)}
+
+.chips{list-style:none;margin:40px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
+.chips li{display:flex;align-items:center;gap:18px;width:fit-content;padding:15px 26px 15px 18px;border-radius:16px;font:500 27px Inter;color:#ffffff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(190,230,255,.3);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.chips li .ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:rgba(34,228,255,.12);color:#5fe6ff}
+.chips.red li{border-color:rgba(255,170,155,.4);background:rgba(255,140,120,.1)}
+.chips.red li .ic{background:rgba(255,75,62,.14);color:#ff7a66}
+.ic svg{width:28px;height:28px}
+
+/* Title cards */
+.center-block{position:absolute;left:0;right:0;top:600px;text-align:center}
+.center-block::before{content:'';position:absolute;left:50%;top:-40px;width:1500px;height:430px;transform:translateX(-50%);background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(10,22,52,.72),rgba(10,22,52,.4) 55%,transparent 75%);z-index:-1}
+.center-block .kicker{justify-content:center}
+.title{display:flex;justify-content:center;gap:6px;margin:18px 0 8px;font:700 196px/1 'Space Grotesk';letter-spacing:.04em}
+.title span{display:inline-block;background:linear-gradient(180deg,#ffffff 30%,#c8f4ff 70%,#9cc8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 22px rgba(6,14,36,.7))}
+.sub{font:500 34px 'Space Grotesk';color:#ffffff;letter-spacing:.01em;margin:6px 0 0}
+.team{font:400 26px Inter;color:#d6e6f5;margin-top:22px;letter-spacing:.04em}
+.team b{color:#eaf6ff;font-weight:600}
+.tagline{font:500 44px 'Space Grotesk';color:#eaf6ff;margin:4px 0 0;letter-spacing:-.01em}
+.tagline em{font-style:normal;color:#5fe6ff}
+
+/* Pipeline */
+.top-col{position:absolute;left:124px;top:84px}
+.top-col h2{font-size:52px;margin:16px 0 0}
+.cap-wrap{position:absolute;left:0;right:0;bottom:60px;height:110px;display:flex;justify-content:center}
+.cap{position:absolute;bottom:0;display:flex;align-items:center;gap:26px;padding:20px 40px 20px 22px;border-radius:24px;white-space:nowrap;
+  background:rgba(14,30,64,.82);border:1px solid rgba(170,225,255,.35);backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(4,10,28,.35)}
+.cap .n{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;font:700 26px 'Space Grotesk';color:#01131f;background:linear-gradient(135deg,#5fe6ff,#2a8bff)}
+.cap b{font:700 34px 'Space Grotesk';color:#fff;margin-right:6px}
+.cap span{font:400 29px Inter;color:#e6f0fa}
+.cap.v .n{background:linear-gradient(135deg,#c79bff,#7a4dff)}
+.cap.g .n{background:linear-gradient(135deg,#7dffc8,#22c98a)}
+
+/* 3D-anchored labels */
+.pin{position:absolute;left:0;top:0;width:0;height:0}
+.pin>div{position:absolute;transform:translate(-50%,-100%);white-space:nowrap}
+.pin.mid>div{transform:translate(-50%,-50%)}
+.tag{padding:10px 18px;border-radius:999px;font:600 19px 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#ffffff;
+  background:rgba(14,30,64,.8);border:1px solid rgba(170,230,255,.5);backdrop-filter:blur(8px)}
+.tag.red{border-color:rgba(255,170,155,.6);color:#fff;background:rgba(60,24,40,.8)}
+.tag.green{border-color:rgba(140,240,196,.6);color:#fff;background:rgba(14,48,52,.8)}
+.metric{text-align:center}
+.metric{padding:14px 22px 16px;border-radius:18px;background:rgba(14,30,64,.72);border:1px solid rgba(170,225,255,.3);backdrop-filter:blur(10px)}
+.metric b{display:block;font:700 54px/1 'Space Grotesk';color:#fff;letter-spacing:-.02em}
+.metric span{display:block;margin-top:10px;font:600 19px 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c4ecff}
+.gauge{text-align:center}
+.gauge b{display:block;font:700 84px/1 'Space Grotesk';color:#fff;letter-spacing:-.03em}
+.gauge b small{font-size:44px;color:#9fdcff;margin-left:2px}
+.gauge>span{display:block;margin-top:12px;font:600 22px 'Space Grotesk';letter-spacing:.24em;text-transform:uppercase;color:#d2f1ff}
+.gauge.v>span{color:#e0d2ff}.gauge.g>span{color:#c6ffe6}.gauge b span{display:inline}
+.card{display:flex;align-items:center;gap:16px;padding:14px 22px 14px 14px;border-radius:18px;font:600 25px 'Space Grotesk';color:#f0f9ff;
+  background:rgba(14,30,64,.82);border:1px solid rgba(170,225,255,.35);backdrop-filter:blur(12px);box-shadow:0 14px 40px rgba(4,10,28,.35)}
+.card .ic{display:grid;place-items:center;width:50px;height:50px;border-radius:14px;background:rgba(34,228,255,.13);color:#5fe6ff}
+.card.s .ic{background:rgba(255,153,51,.16);color:#ffb15c}
+.center-top{position:absolute;left:0;right:0;top:78px;text-align:center}
+.center-top .kicker{justify-content:center}
+.center-top h2{font-size:64px;margin:16px 0 0}
+.foot{position:absolute;left:0;right:0;bottom:56px;text-align:center;font:600 20px 'Space Grotesk';letter-spacing:.3em;color:#c7dbec}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="gl" width="1920" height="1080"></canvas>
+  <div class="vignette"></div>
+  <div class="leftshade" id="leftshade"></div>
+
+  <!-- 0 · Opening -->
+  <section class="sec" data-s="0">
+    <div class="center-block">
+      <div class="kicker" data-in="1.4"><span>Smart India Hackathon 2026</span><span style="color:#ff9933">●</span><span>PS ID 26172</span></div>
+      <div class="title"><span data-in="2.3">M</span><span data-in="2.42">A</span><span data-in="2.54">R</span><span data-in="2.66">V</span><span data-in="2.78">I</span><span data-in="2.9">N</span></div>
+      <p class="sub" data-in="3.9">Low-Latency &amp; Efficient Voice Activator for Edge Devices</p>
+      <p class="team" data-in="5.0">by <b>Team Learning Loop</b></p>
+    </div>
+  </section>
+
+  <!-- 1 · Problem -->
+  <section class="sec" data-s="1" data-shade="1">
+    <div class="col">
+      <div class="kicker red" data-in=".7"><span class="bar"></span>01 · The Problem</div>
+      <h2 data-in="1.1">Always-on assistants<br>stream <em class="red">everything</em><br>to the cloud</h2>
+      <p class="body" data-in="2.0">Listening for one word shouldn't mean sending every second of sound off the device.</p>
+      <ul class="chips red">
+        <li data-in="4.0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>Constant power drain</li>
+        <li data-in="5.3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Network latency</li>
+        <li data-in="6.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>Privacy risk</li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="p-cloud"><div class="tag red" data-in="2.6">Cloud server</div></div>
+    <div class="pin" data-pin="p-stream"><div class="tag red" data-in="3.2">Always streaming</div></div>
+    <div class="pin" data-pin="p-battery"><div class="tag red" data-in="3.8">Battery</div></div>
+  </section>
+
+  <!-- 2 · Solution -->
+  <section class="sec" data-s="2" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".7"><span class="bar"></span>02 · Our Solution</div>
+      <h2 data-in="1.1">MARVIN listens<br><em>on the edge</em></h2>
+      <p class="body" data-in="2.0">A two-stage TinyML wake-word detector that runs entirely on an ESP32. The cloud is used only after it hears “MARVIN”.</p>
+      <ul class="chips">
+        <li data-in="4.2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>On-device wake-word detection</li>
+        <li data-in="5.4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg></span>Low-power I²S microphone</li>
+        <li data-in="6.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/></svg></span>Cloud speech-to-text on demand</li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="s-esp"><div class="tag" data-in="2.8">ESP32-WROOM-32</div></div>
+    <div class="pin" data-pin="s-mic"><div class="tag" data-in="3.3">INMP441 mic</div></div>
+    <div class="pin" data-pin="s-net"><div class="tag green" data-in="3.8">TinyML on-chip</div></div>
+  </section>
+
+  <!-- 3 · How it works -->
+  <section class="sec" data-s="3">
+    <div class="top-col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>03 · How it works</div>
+      <h2 data-in="1.0">From sound to command</h2>
+    </div>
+    <div class="cap-wrap">
+      <div class="cap" data-in="1.0" data-out="4.8"><span class="n">01</span><b>Capture</b><span>INMP441 microphone streams 16 kHz audio</span></div>
+      <div class="cap" data-in="5.3" data-out="9.6"><span class="n">02</span><b>Extract</b><span>Log-Mel features computed on the ESP32</span></div>
+      <div class="cap" data-in="10.1" data-out="14.4"><span class="n">03</span><b>Detect</b><span>Stage 1 flags possible “MARVIN” candidates</span></div>
+      <div class="cap v" data-in="14.9" data-out="19.2"><span class="n">04</span><b>Verify</b><span>Stage 2 confirms the wake word and rejects false alarms</span></div>
+      <div class="cap g" data-in="19.7"><span class="n">05</span><b>Transcribe</b><span>Only now is audio sent to the cloud for speech-to-text</span></div>
+    </div>
+  </section>
+
+  <!-- 4 · Efficiency -->
+  <section class="sec" data-s="4" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".7"><span class="bar"></span>04 · Built for the edge</div>
+      <h2 data-in="1.1">Tiny model.<br><em>Real-time</em> response.</h2>
+      <p class="body" data-in="2.0">Everything runs inside the ESP32's 320 KB of RAM — no external memory, no cloud needed to listen.</p>
+    </div>
+    <div class="pin" data-pin="m0"><div class="metric" data-in="2.6"><b data-count="28" data-cin="2.6" data-prefix="~" data-suffix=" KB">~28 KB</b><span>Model size</span></div></div>
+    <div class="pin" data-pin="m1"><div class="metric" data-in="3.0"><b data-count="113" data-cin="3.0" data-prefix="~" data-suffix=" KB">~113 KB</b><span>Static RAM</span></div></div>
+    <div class="pin" data-pin="m2"><div class="metric" data-in="3.4"><b data-count="51" data-cin="3.4" data-prefix="~" data-suffix=" ms">~51 ms</b><span>Wake decision</span></div></div>
+    <div class="pin" data-pin="m3"><div class="metric" data-in="3.8"><b data-count="8" data-cin="3.8" data-prefix="&lt; " data-suffix="%">&lt; 8%</b><span>CPU duty</span></div></div>
+  </section>
+
+  <!-- 5 · Results -->
+  <section class="sec" data-s="5">
+    <div class="center-top">
+      <div class="kicker" data-in=".6"><span>05 · Results</span></div>
+      <h2 data-in="1.0">Accurate. Reliable. <em>Real-time.</em></h2>
+    </div>
+    <div class="pin mid" data-pin="g0"><div class="gauge" data-in="1.6"><b><span data-count="95.9" data-dec="1" data-cin="1.6">95.9</span><small>%</small></b><span>Precision</span></div></div>
+    <div class="pin mid" data-pin="g1"><div class="gauge v" data-in="2.0"><b><span data-count="95.1" data-dec="1" data-cin="2.0">95.1</span><small>%</small></b><span>Recall</span></div></div>
+    <div class="pin mid" data-pin="g2"><div class="gauge g" data-in="2.4"><b><span data-count="95.5" data-dec="1" data-cin="2.4">95.5</span><small>%</small></b><span>F1 score</span></div></div>
+  </section>
+
+  <!-- 6 · Impact -->
+  <section class="sec" data-s="6" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".7"><span class="bar"></span>06 · Impact</div>
+      <h2 data-in="1.1">Voice control for<br><em>every edge device</em></h2>
+      <p class="body" data-in="2.0">Low power, private by design and ready for real-world deployment.</p>
+    </div>
+    <div class="pin mid" data-pin="c0"><div class="card s" data-in="2.8"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2c3 3 4.5 6.5 4.5 10.5L12 17l-4.5-4.5C7.5 8.5 9 5 12 2z"/><path d="M9 17l-2 5 5-2 5 2-2-5"/></svg></span>Space &amp; ISRO missions</div></div>
+    <div class="pin mid" data-pin="c1"><div class="card" data-in="3.4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 3l9 8v10H3z"/><path d="M9 21v-6h6v6"/></svg></span>Smart homes</div></div>
+    <div class="pin mid" data-pin="c2"><div class="card" data-in="4.0"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 8v6M8 10l4 1 4-1M10 21l2-7 2 7"/></svg></span>Assistive technology</div></div>
+    <div class="pin mid" data-pin="c3"><div class="card" data-in="4.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21V10l6 4V10l6 4V6l6 4v11z"/></svg></span>Industrial IoT</div></div>
+  </section>
+
+  <!-- 7 · Closing -->
+  <section class="sec" data-s="7">
+    <div class="center-block" style="top:590px">
+      <div class="title" style="font-size:150px;margin-top:0"><span data-in=".9">M</span><span data-in="1.0">A</span><span data-in="1.1">R</span><span data-in="1.2">V</span><span data-in="1.3">I</span><span data-in="1.4">N</span></div>
+      <p class="tagline" data-in="2.2">“A smarter tomorrow, <em>listening today.</em>”</p>
+      <p class="team" data-in="3.4"><b>Team Learning Loop</b> &nbsp;·&nbsp; PSG Institute of Technology and Applied Research</p>
+    </div>
+    <div class="foot" data-in="4.4">SMART INDIA HACKATHON 2026 &nbsp;·&nbsp; PS ID 26172</div>
+  </section>
+
+  <div id="fade"></div>
+</div>
+<script type="module" src="film.js"></script>
+</body>
+</html>

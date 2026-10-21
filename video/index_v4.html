@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>MARVIN Film</title>
+<script type="importmap">
+{"imports":{"three":"/frontend/node_modules/three/build/three.module.js","three/addons/":"/frontend/node_modules/three/examples/jsm/"}}
+</script>
+<style>
+@font-face{font-family:'Space Grotesk';src:url(fonts/SpaceGrotesk.ttf) format('truetype');font-weight:300 700}
+@font-face{font-family:'Inter';src:url(fonts/Inter.ttf) format('truetype');font-weight:100 900}
+html,body{margin:0;background:#13294f;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;color:#ffffff;-webkit-font-smoothing:antialiased}
+.sec *{text-shadow:0 2px 16px rgba(4,10,28,.75),0 1px 3px rgba(4,10,28,.6)}
+.sec h2 em,.sec .title span{text-shadow:none}
+.sec h2 em{filter:drop-shadow(0 2px 10px rgba(4,10,28,.55))}
+#gl{position:absolute;inset:0;width:1920px;height:1080px;display:block}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 85% at 50% 50%,transparent 62%,rgba(6,14,34,.45) 100%)}
+.leftshade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,18,42,.55) 0%,rgba(8,18,42,.25) 32%,transparent 50%);opacity:0}
+#fade{position:absolute;inset:0;background:#000;pointer-events:none}
+.sec{position:absolute;inset:0;opacity:0;pointer-events:none}
+[data-in]{will-change:opacity,transform}
+
+/* Shared type */
+.kicker{display:flex;align-items:center;gap:16px;font:600 22px 'Space Grotesk';letter-spacing:.32em;color:#9eefff;text-transform:uppercase}
+.kicker .bar{width:64px;height:2px;background:linear-gradient(90deg,#22e4ff,transparent)}
+.kicker.red{color:#ffb3a6}.kicker.red .bar{background:linear-gradient(90deg,#ff4b3e,transparent)}
+h2{font:700 70px/1.05 'Space Grotesk';letter-spacing:-.02em;margin:24px 0 26px;color:#f3fbff}
+h2 em{font-style:normal;text-shadow:none;background:linear-gradient(90deg,#8ff0ff,#c6aaff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2 em.red{background:linear-gradient(90deg,#ffb08a,#ff8fa0);-webkit-background-clip:text;background-clip:text}
+.body{font:400 28px/1.5 Inter;color:#e3eefa;margin:0}
+.col{position:absolute;left:96px;top:196px;width:760px;padding:40px 44px 44px;border-radius:32px;background:linear-gradient(135deg,rgba(14,30,64,.62),rgba(10,22,50,.42));border:1px solid rgba(170,215,255,.22);backdrop-filter:blur(16px) saturate(120%);box-shadow:0 30px 80px rgba(4,10,28,.35)}
+
+.chips{list-style:none;margin:40px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
+.chips li{display:flex;align-items:center;gap:18px;width:fit-content;padding:15px 26px 15px 18px;border-radius:16px;font:500 27px Inter;color:#ffffff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(190,230,255,.3);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.chips li .ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:rgba(34,228,255,.12);color:#5fe6ff}
+.chips.red li{border-color:rgba(255,170,155,.4);background:rgba(255,140,120,.1)}
+.chips.red li .ic{background:rgba(255,75,62,.14);color:#ff7a66}
+.ic svg{width:28px;height:28px}
+
+/* Title cards */
+.center-block{position:absolute;left:0;right:0;top:600px;text-align:center}
+.center-block::before{content:'';position:absolute;left:50%;top:-40px;width:1500px;height:430px;transform:translateX(-50%);background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(10,22,52,.72),rgba(10,22,52,.4) 55%,transparent 75%);z-index:-1}
+.center-block .kicker{justify-content:center}
+.title{display:flex;justify-content:center;gap:6px;margin:18px 0 8px;font:700 196px/1 'Space Grotesk';letter-spacing:.04em}
+.title span{display:inline-block;background:linear-gradient(180deg,#ffffff 30%,#c8f4ff 70%,#9cc8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 22px rgba(6,14,36,.7))}
+.sub{font:500 34px 'Space Grotesk';color:#ffffff;letter-spacing:.01em;margin:6px 0 0}
+.team{font:400 26px Inter;color:#d6e6f5;margin-top:22px;letter-spacing:.04em}
+.team b{color:#eaf6ff;font-weight:600}
+.tagline{font:500 44px 'Space Grotesk';color:#eaf6ff;margin:4px 0 0;letter-spacing:-.01em}
+.tagline em{font-style:normal;color:#5fe6ff}
+
+/* Pipeline */
+.top-col{position:absolute;left:124px;top:84px}
+.top-col h2{font-size:52px;margin:16px 0 0}
+.cap-wrap{position:absolute;left:0;right:0;bottom:60px;height:110px;display:flex;justify-content:center}
+.cap{position:absolute;bottom:0;display:flex;align-items:center;gap:26px;padding:20px 40px 20px 22px;border-radius:24px;white-space:nowrap;
+  background:rgba(14,30,64,.82);border:1px solid rgba(170,225,255,.35);backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(4,10,28,.35)}
+.cap .n{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;font:700 26px 'Space Grotesk';color:#01131f;background:linear-gradient(135deg,#5fe6ff,#2a8bff)}
+.cap b{font:700 34px 'Space Grotesk';color:#fff;margin-right:6px}
+.cap span{font:400 29px Inter;color:#e6f0fa}
+.cap.v .n{background:linear-gradient(135deg,#c79bff,#7a4dff)}
+.cap.g .n{background:linear-gradient(135deg,#7dffc8,#22c98a)}
+
+/* 3D-anchored labels */
+.pin{position:absolute;left:0;top:0;width:0;height:0}
+.pin>div{position:absolute;transform:translate(-50%,-100%);white-space:nowrap}
+.pin.mid>div{transform:translate(-50%,-50%)}
+.tag{padding:10px 18px;border-radius:999px;font:600 19px 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#ffffff;
+  background:rgba(14,30,64,.8);border:1px solid rgba(170,230,255,.5);backdrop-filter:blur(8px)}
+.tag.red{border-color:rgba(255,170,155,.6);color:#fff;background:rgba(60,24,40,.8)}
+.tag.green{border-color:rgba(140,240,196,.6);color:#fff;background:rgba(14,48,52,.8)}
+.metric{text-align:center}
+.metric{padding:14px 22px 16px;border-radius:18px;background:rgba(14,30,64,.72);border:1px solid rgba(170,225,255,.3);backdrop-filter:blur(10px)}
+.metric b{display:block;font:700 54px/1 'Space Grotesk';color:#fff;letter-spacing:-.02em}
+.metric span{display:block;margin-top:10px;font:600 19px 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c4ecff}
+.gauge{text-align:center}
+.gauge b{display:block;font:700 84px/1 'Space Grotesk';color:#fff;letter-spacing:-.03em}
+.gauge b small{font-size:44px;color:#9fdcff;margin-left:2px}
+.gauge>span{display:block;margin-top:12px;font:600 22px 'Space Grotesk';letter-spacing:.24em;text-transform:uppercase;color:#d2f1ff}
+.gauge.v>span{color:#e0d2ff}.gauge.g>span{color:#c6ffe6}.gauge b span{display:inline}
+.card{display:flex;align-items:center;gap:16px;padding:14px 22px 14px 14px;border-radius:18px;font:600 25px 'Space Grotesk';color:#f0f9ff;
+  background:rgba(14,30,64,.82);border:1px solid rgba(170,225,255,.35);backdrop-filter:blur(12px);box-shadow:0 14px 40px rgba(4,10,28,.35)}
+.card .ic{display:grid;place-items:center;width:50px;height:50px;border-radius:14px;background:rgba(34,228,255,.13);color:#5fe6ff}
+.card.s .ic{background:rgba(255,153,51,.16);color:#ffb15c}
+.center-top{position:absolute;left:0;right:0;top:78px;text-align:center}
+.center-top .kicker{justify-content:center}
+.center-top h2{font-size:64px;margin:16px 0 0}
+.foot{position:absolute;left:0;right:0;bottom:56px;text-align:center;font:600 20px 'Space Grotesk';letter-spacing:.3em;color:#c7dbec}
+
+.pin.top>div{transform:translate(-50%,0)}
+.bubble{padding:20px 30px;border-radius:30px 30px 30px 8px;font:600 34px 'Space Grotesk';color:#fff;background:rgba(14,30,64,.82);border:1px solid rgba(170,225,255,.45);backdrop-filter:blur(12px);box-shadow:0 18px 50px rgba(4,10,28,.35)}
+.bubble em{font-style:normal;color:#9eefff}
+.bubble.small{font-size:28px;padding:14px 24px;border-radius:24px 24px 24px 6px;border-color:rgba(140,240,196,.55)}
+.score{text-align:center;padding:12px 22px 14px;border-radius:18px;background:rgba(14,30,64,.8);border:1px solid rgba(126,232,255,.45);backdrop-filter:blur(10px)}
+.score b{display:block;font:700 50px/1 'Space Grotesk';color:#fff}
+.score span{display:block;margin-top:8px;font:600 17px 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#bdf2ff}
+.score.v{border-color:rgba(183,155,255,.55)}.score.v span{color:#e0d2ff}
+.checks{list-style:none;margin:30px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.checks li{display:flex;align-items:center;gap:18px;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(140,240,196,.28)}
+.checks i{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;font:700 24px Inter;font-style:normal;color:#0b2a22;background:linear-gradient(135deg,#a8f7d4,#4fd6a0)}
+.checks b{display:block;font:700 26px 'Space Grotesk';color:#fff}
+.checks span{display:block;font:400 20px Inter;color:#d5e5f2;margin-top:2px}
+.gauge b{font-size:60px}.gauge b small{font-size:32px}.gauge>span{font-size:19px}
+.gauge.b>span{color:#d6e3ff}
+
+.chips.two{gap:12px;margin-top:28px}
+.chips.two li{align-items:center;padding:12px 22px 12px 14px}
+.chips.two li .ic{font:700 22px 'Space Grotesk'}
+.chips.two b{display:block;font:700 25px 'Space Grotesk';color:#fff}
+.chips.two li div span{display:block;font:400 20px Inter;color:#d5e5f2;margin-top:3px}
+.shift{display:flex;align-items:center;gap:14px;margin-top:26px;font:600 20px 'Space Grotesk';letter-spacing:.06em}
+.shift .from{padding:8px 16px;border-radius:999px;background:rgba(255,140,120,.16);border:1px solid rgba(255,170,155,.5);color:#ffd3c9}
+.shift b{color:#9eefff;font-size:28px}
+.shift .to{padding:8px 16px;border-radius:999px;background:rgba(140,240,196,.16);border:1px solid rgba(140,240,196,.55);color:#d8ffef}
+.ucard{width:430px;padding:22px 26px 20px;border-radius:22px;background:rgba(14,30,64,.84);border:1px solid rgba(126,232,255,.45);backdrop-filter:blur(12px);box-shadow:0 18px 50px rgba(4,10,28,.35)}
+.ucard h3{margin:0 0 10px;font:700 30px 'Space Grotesk';color:#fff}
+.ucard ul{margin:0;padding-left:22px;font:400 21px/1.45 Inter;color:#dbe8f5}
+.ucard p{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(170,225,255,.25);font:600 20px 'Space Grotesk';color:#9eefff}
+.ucard.v{border-color:rgba(183,155,255,.55)}.ucard.v p{color:#d2bcff}
+.ucard.g{border-color:rgba(140,240,196,.55)}.ucard.g p{color:#a8f7d4}
+.callout{display:flex;align-items:center;gap:10px;transform-origin:left;padding:10px 18px;border-radius:999px;font:600 20px 'Space Grotesk';color:#fff;background:rgba(14,30,64,.88);border:1px solid rgba(126,232,255,.65);box-shadow:0 10px 30px rgba(4,10,28,.45)}
+.callout.g{border-color:rgba(140,240,196,.7)}
+.pin[data-pin^="db"]>div{transform:translate(-50%,calc(-100% - 18px))}
+.feas{position:absolute;left:0;right:0;bottom:70px;display:flex;justify-content:center;gap:16px}
+.feas span{padding:12px 22px;border-radius:999px;font:600 21px 'Space Grotesk';color:#fff;background:rgba(14,30,64,.8);border:1px solid rgba(140,240,196,.45)}
+.body.small{font-size:22px;margin-top:-6px}
+.stack{margin:30px 0 0;display:flex;flex-direction:column;gap:12px}
+.stack>div{display:flex;gap:18px;align-items:baseline;padding:13px 18px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(190,230,255,.25)}
+.stack dt{flex:none;width:150px;font:600 18px 'Space Grotesk';letter-spacing:.16em;text-transform:uppercase;color:#9eefff}
+.stack dd{margin:0;font:500 23px Inter;color:#fff}
+.risks{position:absolute;right:70px;bottom:64px;width:640px;padding:22px 26px;border-radius:24px;background:rgba(14,30,64,.84);border:1px solid rgba(170,225,255,.35);backdrop-filter:blur(12px)}
+.risks h4{margin:0 0 12px;font:600 19px 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#ffcf9e}
+.risks div{display:flex;gap:14px;padding:8px 0;border-top:1px solid rgba(170,225,255,.16)}
+.risks b{flex:none;width:200px;font:700 21px 'Space Grotesk';color:#fff}
+.risks span{font:400 20px Inter;color:#d5e5f2}
+.who{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:24px}
+.who b{font:600 18px 'Space Grotesk';letter-spacing:.18em;text-transform:uppercase;color:#9eefff;margin-right:6px}
+.who span{padding:8px 16px;border-radius:999px;font:500 19px Inter;color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(190,230,255,.3)}
+
+.dash-head{position:absolute;left:160px;top:34px}
+.dash-head h2{font-size:46px;margin:10px 0 0}
+.dash-frame{position:absolute;left:160px;top:146px;width:1600px;height:900px;border-radius:18px;overflow:hidden;border:1px solid rgba(170,225,255,.5);box-shadow:0 40px 120px rgba(2,6,18,.55),0 0 70px rgba(111,157,255,.28);transform-origin:50% 100%}
+.dash-frame img{display:block;width:100%;height:100%}
+.hl{position:absolute;border:3px solid #7ee8ff;border-radius:14px;box-shadow:0 0 0 3000px rgba(4,10,26,.52),0 0 26px rgba(126,232,255,.75),inset 0 0 18px rgba(126,232,255,.25)}
+.hl span{position:absolute;left:12px;top:10px;white-space:nowrap;padding:9px 16px;border-radius:999px;font:700 21px 'Space Grotesk';color:#04111f;background:linear-gradient(90deg,#9eefff,#b9d2ff);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.hl.left span{left:auto;right:calc(100% + 14px);top:16px}
+.hl.up span{top:auto;bottom:calc(100% + 12px);left:0}
+
+.photo-head{position:absolute;left:240px;top:40px}
+.photo-head h2{font-size:46px;margin:10px 0 0}
+.proto-frame{position:absolute;left:240px;top:160px;width:1440px;height:810px;border-radius:20px;overflow:hidden;border:1px solid rgba(170,225,255,.5);box-shadow:0 40px 120px rgba(2,6,18,.6),0 0 70px rgba(111,157,255,.25);transform-origin:50% 100%}
+.proto-frame img{display:block;width:100%;height:100%}
+.plabel{position:absolute;width:0;height:0}
+.plabel i{position:absolute;left:-34px;top:-34px;width:68px;height:68px;border-radius:50%;border:4px solid #9eefff;box-shadow:0 0 0 3px rgba(4,12,30,.55),0 0 24px rgba(126,232,255,.9)}
+.plabel i.wide{left:-100px;top:-90px;width:200px;height:180px;border-radius:22px}
+.plabel span{position:absolute;white-space:nowrap;padding:12px 22px;border-radius:999px;font:700 30px 'Space Grotesk';letter-spacing:.04em;color:#04111f;background:linear-gradient(90deg,#9eefff,#c9dcff);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.plabel span.up{left:0;bottom:120px;transform:translateX(-50%)}
+.plabel span.up::after{content:'';position:absolute;left:50%;top:100%;width:3px;height:52px;background:#9eefff;transform:translateX(-50%)}
+.plabel span.right{left:150px;top:0;transform:translateY(-50%)}
+.plabel span.right::after{content:'';position:absolute;right:100%;top:50%;width:48px;height:3px;background:#9eefff}
+
+.flow{position:absolute;left:880px;width:950px;padding:22px 26px 20px;border-radius:24px;backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(4,10,28,.35)}
+.flow.red{top:150px;background:rgba(60,22,38,.62);border:1px solid rgba(255,150,135,.45)}
+.flow.green{top:560px;background:rgba(12,48,52,.62);border:1px solid rgba(140,240,196,.5)}
+.ftitle{display:flex;align-items:center;gap:12px;font:700 22px 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#ffc2b6}
+.flow.green .ftitle{color:#bff8de}
+.ftitle .dot{width:12px;height:12px;border-radius:50%;background:#ff8a7a;box-shadow:0 0 12px #ff8a7a}
+.flow.green .ftitle .dot{background:#8af0c4;box-shadow:0 0 12px #8af0c4}
+.frow{display:flex;align-items:center;margin-top:20px}
+.fnode{flex:none;width:136px;text-align:center}
+.flow.red .fnode{width:160px}
+.fnode .fi{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 10px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);color:#ffb3a6}
+.flow.green .fnode .fi{color:#9ff5d2}
+.fnode .fi svg{width:40px;height:40px}
+.fnode b{display:block;font:700 20px 'Space Grotesk';color:#fff}
+.fnode small{display:block;margin-top:3px;font:400 16px Inter;color:#d8e4f0}
+.farrow{flex:1;height:78px;align-self:flex-start;display:flex;align-items:center;padding:0 4px}
+.farrow i{display:block;width:100%;height:4px;border-radius:4px;background-image:repeating-linear-gradient(90deg,#ff8a7a 0 12px,transparent 12px 22px)}
+.farrow.g i{background-image:repeating-linear-gradient(90deg,#8af0c4 0 12px,transparent 12px 22px)}
+.fnote{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.18);font:600 19px 'Space Grotesk';color:#ffd0c6}
+.flow.green .fnote{color:#c9fbe5}
+.tag.mic{font-size:24px;padding:12px 22px;color:#fff;background:rgba(90,30,40,.88);border:2px solid #ff9a88}
+.tag.cost{font-size:22px;padding:11px 20px;color:#3a2600;background:linear-gradient(90deg,#ffd27a,#f2b544);border:none}
+
+.opening{background:radial-gradient(ellipse 70% 60% at 85% 10%,#e7effb 0%,transparent 60%),linear-gradient(180deg,#fbfcfe,#eef3fa);border-top:8px solid #ff8a1f}
+.opening::after{content:'';position:absolute;left:0;right:0;bottom:0;height:8px;background:#0b3d91}
+.opening *{text-shadow:none}
+.op-orbits{position:absolute;inset:0;width:100%;height:100%}
+.op-top{position:absolute;left:80px;right:80px;top:44px;display:flex;justify-content:space-between;align-items:center}
+.op-logos{display:flex;align-items:center;gap:28px}
+.op-logos i{width:2px;height:70px;background:#d3dceb}
+.ll{display:flex;align-items:center;gap:12px;font:700 30px 'Space Grotesk';color:#0b3d91;letter-spacing:-.01em}
+.op-main{position:absolute;left:0;right:0;top:300px;text-align:center}
+.op-kicker{font:600 22px 'Space Grotesk';letter-spacing:.22em;color:#d9670b}
+.op-title{margin:18px 0 0;font:700 190px/1 'Space Grotesk';letter-spacing:.08em;color:#0b2f6e}
+.op-rule{width:180px;height:6px;margin:22px auto 0;border-radius:3px;background:linear-gradient(90deg,#ff8a1f,#ffb066)}
+.op-sub{margin:24px 0 0;font:500 38px 'Space Grotesk';color:#1d3a66}
+.op-facts{display:flex;justify-content:center;gap:22px;margin-top:54px}
+.op-facts>div{min-width:250px;padding:16px 26px;border-radius:14px;background:#ffffff;border:1px solid #d6e0ef;box-shadow:0 6px 18px rgba(20,50,100,.07);text-align:left}
+.op-facts span{display:block;font:600 15px 'Space Grotesk';letter-spacing:.18em;text-transform:uppercase;color:#7a8aa6}
+.op-facts b{display:block;margin-top:6px;font:700 26px 'Space Grotesk';color:#0b2f6e}
+.op-foot{position:absolute;left:0;right:0;bottom:46px;text-align:center;font:500 20px Inter;color:#5d6f8c;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="gl" width="1920" height="1080"></canvas>
+  <div class="vignette"></div>
+  <div class="leftshade" id="leftshade"></div>
+
+  <!-- 0 · Opening -->
+  <section class="sec opening" data-s="0">
+    <svg class="op-orbits" viewBox="0 0 1920 1080" aria-hidden="true">
+      <ellipse cx="1560" cy="760" rx="760" ry="230" fill="none" stroke="#d6e2f5" stroke-width="2" transform="rotate(-14 1560 760)"/>
+      <ellipse cx="1560" cy="760" rx="560" ry="160" fill="none" stroke="#e3ebf8" stroke-width="2" transform="rotate(-14 1560 760)"/>
+      <path d="M180 1010 C 640 940, 1180 760, 1700 330" fill="none" stroke="#ffb066" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+      <circle cx="1700" cy="330" r="9" fill="#ff8a1f"/>
+    </svg>
+    <div class="op-top">
+      <div class="op-logos" data-in=".3"><img src="assets/isro-logo.svg" alt="ISRO" style="height:96px"><i></i><img src="assets/sih-logo.png" alt="Smart India Hackathon 2026" style="height:84px"></div>
+      <div class="op-logos" data-in=".5"><span class="ll"><svg viewBox="0 0 120 60" width="92" height="46"><defs><linearGradient id="llg" x1="0" x2="1"><stop offset="0" stop-color="#1b4fb8"/><stop offset="1" stop-color="#ff8a1f"/></linearGradient></defs><path d="M30 30c0-11 8-18 17-18 14 0 22 36 36 36 9 0 17-7 17-18s-8-18-17-18c-14 0-22 36-36 36-9 0-17-7-17-18z" fill="none" stroke="url(#llg)" stroke-width="9" stroke-linecap="round"/></svg><span>The Learning Loop</span></span><i></i><img src="assets/psgitech-logo-crop.png" alt="PSG Institute of Technology and Applied Research" style="height:86px"></div>
+    </div>
+    <div class="op-main">
+      <div class="op-kicker" data-in=".9">SMART INDIA HACKATHON 2026 &nbsp;|&nbsp; PROBLEM STATEMENT ID: SIH26172</div>
+      <h1 class="op-title" data-in="1.3">MARVIN</h1>
+      <div class="op-rule" data-in="1.6"></div>
+      <p class="op-sub" data-in="1.8">Low-Latency TinyML Voice Activator for Edge Devices</p>
+      <div class="op-facts">
+        <div data-in="2.4"><span>Theme</span><b>Smart Automation</b></div>
+        <div data-in="2.6"><span>PS Category</span><b>Hardware</b></div>
+        <div data-in="2.8"><span>Team ID</span><b>158994</b></div>
+        <div data-in="3.0"><span>Team</span><b>The Learning Loop</b></div>
+      </div>
+    </div>
+    <div class="op-foot" data-in="3.4">PSG Institute of Technology and Applied Research, Coimbatore</div>
+  </section>
+
+  <!-- 1 · Why MARVIN -->
+  <section class="sec" data-s="1" data-shade="1">
+    <div class="col" style="width:680px">
+      <div class="kicker red" data-in=".7"><span class="bar"></span>01 · The problem · before MARVIN</div>
+      <h2 data-in="1.0">Everything you say<br>goes to the <em class="red">cloud</em></h2>
+      <p class="body" data-in="1.7">Voice assistants stream every word to cloud servers just to catch one wake word, and that cloud compute is expensive.</p>
+      <ul class="chips red">
+        <li data-in="2.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 5h10M7 9h10M10 5c4 0 4 8 0 8H8l7 6"/></svg></span>Cloud computing is expensive</li>
+        <li data-in="3.4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>Every word streamed, nonstop</li>
+        <li data-in="4.2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>Privacy &amp; latency concerns</li>
+      </ul>
+      <div class="shift" data-in="5.4"><span class="from">Cloud-first</span><b>→</b><span class="to">Edge-first with MARVIN</span></div>
+    </div>
+    <div class="pin" data-pin="p-mic"><div class="tag mic" data-in="1.4">Always-on mic</div></div>
+    <div class="pin" data-pin="p-cloud"><div class="tag red" data-in="2.0">Cloud server</div></div>
+    <div class="pin" data-pin="p-stream"><div class="tag red" data-in="2.4">Everything you say → cloud</div></div>
+    <div class="pin top" data-pin="p-cost"><div class="tag cost" data-in="3.0">₹ Cloud cost keeps growing</div></div>
+  </section>
+
+  <!-- 2 · Solution / prototype -->
+  <section class="sec" data-s="2" data-shade="1">
+    <div class="col" data-in="0" data-out="5.3" data-fade>
+      <div class="kicker" data-in=".7"><span class="bar"></span>02 · Our Solution</div>
+      <h2 data-in="1.0">Listen locally.<br><em>Connect when needed.</em></h2>
+      <ul class="chips two">
+        <li data-in="1.9"><span class="ic">1</span><div><b>Low-latency edge activation</b><span>Wake word detected locally on the ESP32</span></div></li>
+        <li data-in="2.6"><span class="ic">2</span><div><b>Resource-efficient TinyML</b><span>INT8 model · 114 KB RAM · 7.4% CPU</span></div></li>
+        <li data-in="3.3"><span class="ic">3</span><div><b>Two-stage verification</b><span>Rejects MARTIN, MARGIN, MARLIN</span></div></li>
+        <li data-in="4.0"><span class="ic">4</span><div><b>On-demand cloud ASR</b><span>Audio leaves only after verification</span></div></li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="pr-esp"><div class="tag" data-in="1.6" data-out="5.4">ESP32</div></div>
+    <div class="pin" data-pin="pr-mic"><div class="tag" data-in="2.0" data-out="5.4">INMP441 mic</div></div>
+    <div class="pin" data-pin="pr-oled"><div class="tag" data-in="2.4" data-out="5.4">OLED SSD1306</div></div>
+    <div class="photo-head">
+      <div class="kicker" data-in="5.5"><span class="bar"></span>02 · Our real working prototype</div>
+      <h2 data-in="5.7">Built and running on <em>real hardware</em></h2>
+    </div>
+    <div class="proto-frame" data-in="5.6" data-tilt>
+      <img src="assets/prototype_hd.jpg" alt="MARVIN prototype on a breadboard">
+      <div class="plabel" style="left:14.1%;top:75.6%" data-in="6.9" data-fade><i></i><span class="up">MIC · INMP441</span></div>
+      <div class="plabel" style="left:53.8%;top:33%" data-in="7.5" data-fade><i></i><span class="up">ESP32</span></div>
+      <div class="plabel" style="left:60%;top:66.5%" data-in="8.1" data-fade><i class="wide"></i><span class="right">OLED · SSD1306</span></div>
+    </div>
+  </section>
+
+  <!-- 3 · Why we stand out -->
+  <section class="sec" data-s="3">
+    <div class="center-top">
+      <div class="kicker" data-in=".5"><span>03 · Why we stand out</span></div>
+      <h2 data-in=".8">What makes MARVIN <em>unique</em></h2>
+    </div>
+    <div class="pin top" data-pin="uq0"><div class="ucard" data-in="1.6"><h3>Two-stage cascade</h3><ul><li>Stage-1 CNN spots wake-word candidates</li><li>Stage-2 temporal check cuts false activations</li></ul><p>Always-on detection + selective verification</p></div></div>
+    <div class="pin top" data-pin="uq1"><div class="ucard v" data-in="2.0"><h3>Candidate-triggered compute</h3><ul><li>Stage-1 runs continuously</li><li>Heavier Stage-2 runs only on candidates</li></ul><p>Heavy computation only when needed</p></div></div>
+    <div class="pin top" data-pin="uq2"><div class="ucard g" data-in="2.4"><h3>Real-world robustness</h3><ul><li>84,843 real speech clips + hard negatives</li><li>Noise, gain &amp; time-shift augmentation</li></ul><p>Designed beyond clean-room audio</p></div></div>
+  </section>
+
+  <!-- 4 · Tech stack -->
+  <section class="sec" data-s="4" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>04 · Technologies used</div>
+      <h2 data-in=".9">Built on a <em>proven stack</em></h2>
+      <dl class="stack">
+        <div data-in="1.6"><dt>Hardware</dt><dd>ESP32 · INMP441 · OLED SSD1306</dd></div>
+        <div data-in="2.1"><dt>Audio</dt><dd>Log-Mel features (98 × 24)</dd></div>
+        <div data-in="2.6"><dt>Model</dt><dd>Stage-1 CNN + Stage-2 temporal · INT8 · TFLite Micro</dd></div>
+        <div data-in="3.1"><dt>Cloud &amp; web</dt><dd>Cloud ASR · React dashboard</dd></div>
+        <div data-in="3.6"><dt>Tools</dt><dd>Python · TensorFlow · Arduino IDE · MATLAB · VS Code</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 5 · Overall workflow -->
+  <section class="sec" data-s="5">
+    <div class="top-col">
+      <div class="kicker" data-in=".5"><span class="bar"></span>05 · Technical approach · workflow</div>
+      <h2 data-in=".8">From voice to action</h2>
+    </div>
+    <div class="pin" data-pin="wf-bubble"><div class="bubble" data-in=".6">“Hey MARVIN, <em>what is the weather?</em>”</div></div>
+    <div class="pin top" data-pin="wf-t0"><div class="tag" data-in="1.0">Voice input · 16 kHz mono</div></div>
+    <div class="pin top" data-pin="wf-t1"><div class="tag" data-in="4.45">INMP441 · I²S · 16 kHz</div></div>
+    <div class="pin" data-pin="wf-t2a"><div class="tag" data-in="8.5">Framing · Noise reduction</div></div>
+    <div class="pin top" data-pin="wf-t2"><div class="tag" data-in="9.2">Log-Mel features · 98 × 24</div></div>
+    <div class="pin" data-pin="wf-s1"><div class="score" data-in="12.9"><b data-count="0.82" data-dec="2" data-cin="12.9">0.82</b><span>Score · threshold 0.60</span></div></div>
+    <div class="pin top" data-pin="wf-t3"><div class="tag" data-in="12.4">Stage-1 CNN · 3.9K params · INT8</div></div>
+    <div class="pin" data-pin="wf-s2"><div class="score v" data-in="16.9"><b data-count="0.91" data-dec="2" data-cin="16.9">0.91</b><span>Score · threshold 0.65</span></div></div>
+    <div class="pin top" data-pin="wf-t4"><div class="tag" data-in="16.45">Stage-2 temporal · 16.8K params · INT8</div></div>
+    <div class="pin" data-pin="wf-no"><div class="tag red" data-in="20.9">Rejected · no action</div></div>
+    <div class="pin top" data-pin="wf-t5"><div class="tag green" data-in="20.5">Wake word confirmed · MARVIN</div></div>
+    <div class="pin" data-pin="wf-asr"><div class="bubble small" data-in="24.6"><span data-type="“what is the weather?”" data-tin="24.8" data-tdur="1.8">“what is the weather?”</span></div></div>
+    <div class="pin top" data-pin="wf-t6"><div class="tag" data-in="24.45">Cloud ASR · speech → text</div></div>
+    <div class="pin top" data-pin="wf-t7"><div class="tag green" data-in="28.45">OLED + web dashboard (React)</div></div>
+    <div class="cap-wrap">
+      <div class="cap" data-in=".9" data-out="3.95"><span class="n">01</span><b>Voice input</b><span>The user speaks naturally to the device</span></div>
+      <div class="cap" data-in="4.45" data-out="7.95"><span class="n">02</span><b>Audio capture</b><span>INMP441 I²S microphone records 16 kHz mono audio</span></div>
+      <div class="cap" data-in="8.45" data-out="11.95"><span class="n">03</span><b>Preprocessing</b><span>Framing, noise reduction and Log-Mel features</span></div>
+      <div class="cap" data-in="12.45" data-out="15.95"><span class="n">04</span><b>Stage-1 CNN</b><span>Flags wake-word candidates on the ESP32</span></div>
+      <div class="cap v" data-in="16.45" data-out="19.95"><span class="n">05</span><b>Stage-2 verification</b><span>Temporal context confirms “MARVIN”</span></div>
+      <div class="cap g" data-in="20.45" data-out="23.95"><span class="n">06</span><b>Wake word confirmed</b><span>Similar words are rejected with no action</span></div>
+      <div class="cap g" data-in="24.45" data-out="27.95"><span class="n">07</span><b>Cloud ASR</b><span>Audio goes to the cloud only after the wake word</span></div>
+      <div class="cap g" data-in="28.45"><span class="n">08</span><b>Output</b><span>Transcript shown on the OLED and web dashboard</span></div>
+    </div>
+  </section>
+
+  <!-- 6 · Robustness -->
+  <section class="sec" data-s="6" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>06 · Real-world robustness</div>
+      <h2 data-in=".9">No false triggers for<br><em>similar words</em></h2>
+      <ul class="chips two">
+        <li data-in="1.7"><span class="ic">✕</span><div><b>Hard-negative validation</b><span>MARGIN · MARINE · NINE · MARTIN rejected</span></div></li>
+        <li data-in="2.4"><span class="ic">◉</span><div><b>Noise robustness test</b><span>Conversation · fan · outdoor · TV / traffic</span></div></li>
+        <li data-in="3.1"><span class="ic">≡</span><div><b>Real-world training data</b><span>84,843 real speech clips + augmentation</span></div></li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="rb-gate"><div class="tag" data-in=".8">Stage-2 verification gate</div></div>
+    <div class="pin" data-pin="rb-0"><div class="tag red" data-in="1.0">MARGIN ✕</div></div>
+    <div class="pin" data-pin="rb-1"><div class="tag red" data-in="1.75">MARINE ✕</div></div>
+    <div class="pin" data-pin="rb-2"><div class="tag red" data-in="2.5">NINE ✕</div></div>
+    <div class="pin" data-pin="rb-3"><div class="tag red" data-in="3.25">MARTIN ✕</div></div>
+    <div class="pin" data-pin="rb-4"><div class="tag green" data-in="4.6">MARVIN ✓ detected in noise</div></div>
+  </section>
+
+  <!-- 7 · Dashboard -->
+  <section class="sec" data-s="7">
+    <div class="dash-head">
+      <div class="kicker" data-in=".2"><span class="bar"></span>07 · Voice monitoring dashboard</div>
+      <h2 data-in=".4">Our real dashboard · <em>live from the ESP32</em></h2>
+    </div>
+    <div class="dash-frame" data-in=".4" data-out="6.4" data-tilt>
+      <img src="assets/dash-live-monitor.jpg" alt="MARVIN live monitor">
+      <div class="hl " style="left:11.77%;top:22.41%;width:47.92%;height:23.89%" data-in="1.4" data-out="2.7" data-fade><span>Stage-1 &amp; Stage-2 live scores · thresholds 0.60 / 0.65</span></div>
+      <div class="hl " style="left:11.77%;top:47.04%;width:47.92%;height:27.41%" data-in="2.7" data-out="4.0" data-fade><span>Live audio waveform + Log-Mel spectrogram</span></div>
+      <div class="hl " style="left:60.31%;top:22.41%;width:23.75%;height:52.04%" data-in="4.0" data-out="5.2" data-fade><span>Detection pipeline · stage by stage</span></div>
+      <div class="hl up" style="left:38.13%;top:75.74%;width:27.81%;height:12.78%" data-in="5.2" data-out="6.3" data-fade><span>Live transcript from cloud ASR</span></div>
+    </div>
+    <div class="dash-frame" data-in="6.3" data-tilt>
+      <img src="assets/dash-model-comparison.jpg" alt="MARVIN model comparison">
+      <div class="hl " style="left:11.77%;top:23.15%;width:87.4%;height:27.6%" data-in="7.2" data-out="8.6" data-fade><span>MARVIN vs published TinyML baselines</span></div>
+      <div class="hl " style="left:11.77%;top:54.81%;width:87.4%;height:15.37%" data-in="8.6" data-out="9.95" data-fade><span>Accuracy · parameters · model size</span></div>
+    </div>
+  </section>
+
+  <!-- 8 · Model performance -->
+  <section class="sec" data-s="8">
+    <div class="center-top">
+      <div class="kicker" data-in=".5"><span>08 · Feasibility · Model performance</span></div>
+      <h2 data-in=".8">Accurate. Reliable. <em>Real-time.</em></h2>
+    </div>
+    <div class="pin mid" data-pin="mp0"><div class="gauge b" data-in="1.4"><b><span data-count="99.5" data-dec="1" data-cin="1.4">99.5</span><small>%</small></b><span>Accuracy</span></div></div>
+    <div class="pin mid" data-pin="mp1"><div class="gauge" data-in="1.75"><b><span data-count="95.9" data-dec="1" data-cin="1.75">95.9</span><small>%</small></b><span>Precision</span></div></div>
+    <div class="pin mid" data-pin="mp2"><div class="gauge v" data-in="2.1"><b><span data-count="95.1" data-dec="1" data-cin="2.1">95.1</span><small>%</small></b><span>Recall</span></div></div>
+    <div class="pin mid" data-pin="mp3"><div class="gauge g" data-in="2.45"><b><span data-count="95.5" data-dec="1" data-cin="2.45">95.5</span><small>%</small></b><span>F1 score</span></div></div>
+    <div class="feas" data-in="4.0"><span>✓ Edge AI on ESP32</span><span>✓ Lightweight INT8 TinyML</span><span>✓ Open-source TFLite Micro</span><span>✓ Commodity hardware</span></div>
+  </section>
+
+  <!-- 9 · Compliance -->
+  <section class="sec" data-s="9" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>09 · Requirement compliance</div>
+      <h2 data-in=".9">5 / 5 targets <em>met</em></h2>
+      <p class="body small" data-in="1.2">Measured against problem statement SIH26172 on the ESP32.</p>
+      <ul class="checks">
+        <li data-in="1.6"><i>✓</i><div><b>RAM &lt; 256 KB</b><span>114 KB used · low-power edge device</span></div></li>
+        <li data-in="2.2"><i>✓</i><div><b>CPU duty &lt; 10%</b><span>7.4% · efficient real-time inference</span></div></li>
+        <li data-in="2.8"><i>✓</i><div><b>Low-latency activation</b><span>~50 ms wake-word inference</span></div></li>
+        <li data-in="3.4"><i>✓</i><div><b>Efficient edge model</b><span>20.7K INT8 parameters</span></div></li>
+        <li data-in="4.0"><i>✓</i><div><b>Noise robustness</b><span>Works in real-world environments</span></div></li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="ep0"><div class="metric" data-in="2.4"><b data-count="50" data-cin="2.4" data-prefix="~" data-suffix=" ms">~50 ms</b><span>Wake-word latency</span></div></div>
+    <div class="pin" data-pin="ep1"><div class="metric" data-in="2.8"><b data-count="7.4" data-dec="1" data-cin="2.8" data-suffix="%">7.4%</b><span>CPU duty</span></div></div>
+    <div class="pin" data-pin="ep2"><div class="metric" data-in="3.2"><b data-count="114" data-cin="3.2" data-suffix=" KB">114 KB</b><span>RAM usage</span></div></div>
+    <div class="pin" data-pin="ep3"><div class="metric" data-in="3.6"><b data-count="20.7" data-dec="1" data-cin="3.6" data-suffix="K">20.7K</b><span>Params · INT8</span></div></div>
+  </section>
+
+  <!-- 10 · Viability -->
+  <section class="sec" data-s="10" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>10 · Viability</div>
+      <h2 data-in=".9">Low-cost, open-source<br>and <em>scalable</em></h2>
+      <ul class="chips two">
+        <li data-in="1.6"><span class="ic">₹</span><div><b>Commodity hardware</b><span>ESP32 + INMP441 + OLED display</span></div></li>
+        <li data-in="2.2"><span class="ic">&lt;/&gt;</span><div><b>Open-source AI stack</b><span>TensorFlow Lite Micro</span></div></li>
+        <li data-in="2.8"><span class="ic">⊘</span><div><b>No specialized accelerator</b><span>Runs on widely available edge hardware</span></div></li>
+      </ul>
+    </div>
+    <div class="pin" data-pin="vb0"><div class="tag" data-in="1.4">Lightweight INT8 model</div></div>
+    <div class="pin" data-pin="vb1"><div class="tag" data-in="1.95">ESP32-compatible architecture</div></div>
+    <div class="pin" data-pin="vb2"><div class="tag" data-in="2.5">Modular wake-word pipeline</div></div>
+    <div class="pin" data-pin="vb3"><div class="tag green" data-in="3.05">Adaptable to multiple applications</div></div>
+    <div class="risks" data-in="4.2">
+      <h4>Key challenges → mitigation</h4>
+      <div><b>False activations</b><span>Two-stage detection + hard negatives</span></div>
+      <div><b>Resource limits</b><span>INT8 models + full-stack profiling</span></div>
+      <div><b>Real-world noise</b><span>Noise, gain, babble &amp; time-shift augmentation</span></div>
+      <div><b>ASR reliability</b><span>Open-source ASR only after the wake word</span></div>
+    </div>
+  </section>
+
+  <!-- 11 · Impact & benefits -->
+  <section class="sec" data-s="11" data-shade="1">
+    <div class="col">
+      <div class="kicker" data-in=".6"><span class="bar"></span>11 · Impact &amp; benefits</div>
+      <h2 data-in=".9">Private, faster,<br><em>accessible</em> voice control</h2>
+      <ul class="chips two">
+        <li data-in="1.6"><span class="ic">◈</span><div><b>Privacy-conscious</b><span>Continuous audio never leaves the device</span></div></li>
+        <li data-in="2.2"><span class="ic">ϟ</span><div><b>Faster voice response</b><span>Local Stage-1 detection, no round trip</span></div></li>
+        <li data-in="2.8"><span class="ic">☁</span><div><b>Lower cloud dependency</b><span>Cloud used only when required</span></div></li>
+      </ul>
+      <div class="who" data-in="3.6"><b>Who benefits</b><span>End users</span><span>IoT developers &amp; OEMs</span><span>Assistive systems</span></div>
+    </div>
+    <div class="pin mid" data-pin="c0"><div class="card" data-in="2.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 3l9 8v10H3z"/><path d="M9 21v-6h6v6"/></svg></span>Smart homes &amp; appliances</div></div>
+    <div class="pin mid" data-pin="c1"><div class="card" data-in="3.1"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 4v4M9 16h6"/></svg></span>Robotics &amp; autonomous systems</div></div>
+    <div class="pin mid" data-pin="c2"><div class="card" data-in="3.6"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 8v6M8 10l4 1 4-1M10 21l2-7 2 7"/></svg></span>Accessibility &amp; assistive tech</div></div>
+    <div class="pin mid" data-pin="c3"><div class="card" data-in="4.1"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21V10l6 4V10l6 4V6l6 4v11z"/></svg></span>Noisy industrial environments</div></div>
+  </section>
+
+  <!-- 12 · Closing -->
+  <section class="sec" data-s="12">
+    <div class="center-block" style="top:590px">
+      <div class="title" style="font-size:150px;margin-top:0"><span data-in=".5">M</span><span data-in=".6">A</span><span data-in=".7">R</span><span data-in=".8">V</span><span data-in=".9">I</span><span data-in="1.0">N</span></div>
+      <p class="tagline" data-in="1.6">Listen locally. <em>Connect when needed.</em></p>
+      <p class="team" data-in="2.4"><b>The Learning Loop</b> &nbsp;·&nbsp; PSG Institute of Technology and Applied Research</p>
+    </div>
+    <div class="foot" data-in="3.0">SMART INDIA HACKATHON 2026 &nbsp;·&nbsp; PS ID SIH26172 &nbsp;·&nbsp; TEAM ID 158994</div>
+  </section>
+
+  <div id="fade"></div>
+</div>
+<script type="module" src="film.js"></script>
+</body>
+</html>

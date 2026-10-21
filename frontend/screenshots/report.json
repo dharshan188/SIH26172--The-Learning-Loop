@@ -1,0 +1,667 @@
+{
+  "errors": [],
+  "assets": {
+    "url": "none",
+    "status": 200,
+    "type": "text/html",
+    "body": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <script type=\"module\" src=\"/@vite/client\"></script>\n\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <meta name=\"theme-color\" content=\"#000914\" />\n    <title>MARVIN | Learning Loop</title>\n  <"
+  },
+  "failed_assets": [],
+  "backend_check": "Passed: scores, transcripts, gating, null metrics, test commands, static corpus, and disconnection.",
+  "pages": [
+    {
+      "page": "home",
+      "width": 1536,
+      "scrollWidth": 1536,
+      "height": 1063,
+      "layout": [
+        {
+          "name": "app page-home",
+          "height": 1063,
+          "top": 0,
+          "rows": "minmax(945px, 1fr) 79px"
+        },
+        {
+          "name": "workspace",
+          "height": 961,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 865,
+          "top": 96,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 989,
+          "rows": "74px"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "live-monitor",
+      "width": 1536,
+      "scrollWidth": 1536,
+      "height": 1024,
+      "layout": [
+        {
+          "name": "app page-live-monitor",
+          "height": 1024,
+          "top": 0,
+          "rows": "963px 61px"
+        },
+        {
+          "name": "workspace",
+          "height": 963,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 852,
+          "top": 110,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 61,
+          "top": 963,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "model-comparison",
+      "width": 1536,
+      "scrollWidth": 1536,
+      "height": 1422,
+      "layout": [
+        {
+          "name": "app page-model-comparison",
+          "height": 1422.09375,
+          "top": 0,
+          "rows": "1348.09px 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 1348.09375,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1238.09375,
+          "top": 110,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 1348.09375,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "dataset",
+      "width": 1536,
+      "scrollWidth": 1536,
+      "height": 1024,
+      "layout": [
+        {
+          "name": "app page-dataset",
+          "height": 1024,
+          "top": 0,
+          "rows": "950px 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 950,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 844,
+          "top": 103,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 950,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "home",
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 1345,
+      "layout": [
+        {
+          "name": "app page-home",
+          "height": 1344.9375,
+          "top": 0,
+          "rows": "minmax(945px, 1fr) 79px"
+        },
+        {
+          "name": "workspace",
+          "height": 1084.9375,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1005.9375,
+          "top": 237,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 1270.9375,
+          "rows": "74px"
+        }
+      ],
+      "overflow": [
+        {
+          "title": null,
+          "width": 364,
+          "scroll": 404
+        }
+      ],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "live-monitor",
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 2717,
+      "layout": [
+        {
+          "name": "app page-live-monitor",
+          "height": 2716.671875,
+          "top": 0,
+          "rows": "minmax(963px, 1fr) 61px"
+        },
+        {
+          "name": "workspace",
+          "height": 2456.984375,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 2308,
+          "top": 306.984375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 86.6875,
+          "top": 2629.984375,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "model-comparison",
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 3212,
+      "layout": [
+        {
+          "name": "app page-model-comparison",
+          "height": 3211.75,
+          "top": 0,
+          "rows": "minmax(950px, 1fr) 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 2952.0625,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 2785.6875,
+          "top": 324.375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 86.6875,
+          "top": 3125.0625,
+          "rows": "none"
+        }
+      ],
+      "overflow": [
+        {
+          "title": null,
+          "width": 364,
+          "scroll": 900
+        }
+      ],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "dataset",
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 2720,
+      "layout": [
+        {
+          "name": "app page-dataset",
+          "height": 2719.71875,
+          "top": 0,
+          "rows": "minmax(950px, 1fr) 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 2460.03125,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 2311.046875,
+          "top": 306.984375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 86.6875,
+          "top": 2633.03125,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "home",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "height": 1063,
+      "layout": [
+        {
+          "name": "app page-home",
+          "height": 1063,
+          "top": 0,
+          "rows": "minmax(945px, 1fr) 79px"
+        },
+        {
+          "name": "workspace",
+          "height": 961,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 865,
+          "top": 96,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 989,
+          "rows": "74px"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "live-monitor",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "height": 1024,
+      "layout": [
+        {
+          "name": "app page-live-monitor",
+          "height": 1024,
+          "top": 0,
+          "rows": "963px 61px"
+        },
+        {
+          "name": "workspace",
+          "height": 963,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 853,
+          "top": 110,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 61,
+          "top": 963,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "model-comparison",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "height": 1778,
+      "layout": [
+        {
+          "name": "app page-model-comparison",
+          "height": 1777.84375,
+          "top": 0,
+          "rows": "1703.84px 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 1703.84375,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1593.84375,
+          "top": 110,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 1703.84375,
+          "rows": "none"
+        }
+      ],
+      "overflow": [
+        {
+          "title": null,
+          "width": 806,
+          "scroll": 900
+        }
+      ],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "dataset",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "height": 1024,
+      "layout": [
+        {
+          "name": "app page-dataset",
+          "height": 1024,
+          "top": 0,
+          "rows": "950px 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 950,
+          "top": 0,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 844,
+          "top": 103,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 950,
+          "rows": "none"
+        }
+      ],
+      "overflow": [
+        {
+          "title": "Hybrid Data Strategy",
+          "width": 184,
+          "scroll": 189
+        }
+      ],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "home",
+      "width": 768,
+      "scrollWidth": 768,
+      "height": 1401,
+      "layout": [
+        {
+          "name": "app page-home",
+          "height": 1400.71875,
+          "top": 0,
+          "rows": "minmax(945px, 1fr) 79px"
+        },
+        {
+          "name": "workspace",
+          "height": 1140.71875,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1061.71875,
+          "top": 237,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 74,
+          "top": 1326.71875,
+          "rows": "74px"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "live-monitor",
+      "width": 768,
+      "scrollWidth": 768,
+      "height": 2317,
+      "layout": [
+        {
+          "name": "app page-live-monitor",
+          "height": 2316.734375,
+          "top": 0,
+          "rows": "minmax(963px, 1fr) 61px"
+        },
+        {
+          "name": "workspace",
+          "height": 2086.734375,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1933,
+          "top": 311.734375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 57,
+          "top": 2259.734375,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "model-comparison",
+      "width": 768,
+      "scrollWidth": 768,
+      "height": 2477,
+      "layout": [
+        {
+          "name": "app page-model-comparison",
+          "height": 2476.828125,
+          "top": 0,
+          "rows": "minmax(950px, 1fr) 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 2246.828125,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 2093.09375,
+          "top": 311.734375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 57,
+          "top": 2419.828125,
+          "rows": "none"
+        }
+      ],
+      "overflow": [
+        {
+          "title": null,
+          "width": 742,
+          "scroll": 900
+        }
+      ],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    },
+    {
+      "page": "dataset",
+      "width": 768,
+      "scrollWidth": 768,
+      "height": 2008,
+      "layout": [
+        {
+          "name": "app page-dataset",
+          "height": 2008.125,
+          "top": 0,
+          "rows": "minmax(950px, 1fr) 74px"
+        },
+        {
+          "name": "workspace",
+          "height": 1778.125,
+          "top": 158,
+          "rows": "none"
+        },
+        {
+          "name": "MAIN",
+          "height": 1624.390625,
+          "top": 311.734375,
+          "rows": "none"
+        },
+        {
+          "name": "FOOTER",
+          "height": 57,
+          "top": 1951.125,
+          "rows": "none"
+        }
+      ],
+      "overflow": [],
+      "navigation": [
+        "Home",
+        "Live Monitor",
+        "Model Comparison",
+        "Dataset"
+      ]
+    }
+  ]
+}
